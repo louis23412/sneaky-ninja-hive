@@ -1,0 +1,16 @@
+{
+  "name": "sneaky-ninja",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sneaky-ninja.js",
+  "scripts": {
+    "start": "node sneaky-ninja.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hiveio/dhive": "^1.1.1",
+    "@hiveio/hive-js": "^2.0.4",
+    "event-stream": "^4.0.1"
+  }
+}
