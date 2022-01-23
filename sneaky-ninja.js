@@ -5,7 +5,7 @@ const util = require('util');
 const actions = require('./actions');
 let globalState = require('./globalState')
 
-const client = new dhive.Client(["https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
+const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"]);
 const stream = client.blockchain.getBlockStream('Latest');
 
 const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
@@ -93,12 +93,6 @@ const runNow = () => {
     }))
     .on('error', function(e){runNow()})
 }
-
-process.on('UnhandledPromiseRejectionWarning', function(err){
-    console.log(err);
-    console.log('ooops something went wrong, restarting stream...')
-    runNow();  
-});
 
 console.clear()
 console.log('Starting up block stream...')

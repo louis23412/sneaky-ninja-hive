@@ -2,7 +2,7 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const client = new dhive.Client(["https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
+const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"]);
 const rcapi = new dhive.RCAPI(client);
 
 const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
@@ -261,8 +261,8 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
             });
 
             if (voteWeight / 100 >= Number(globalState.globalVars.RFMINWEIGHT)) {
-                //Rehive:
-                if (globalState.globalVars.REHIVE == true) {
+                //Reblog:
+                if (globalState.globalVars.REBLOG == true) {
                     const json = JSON.stringify(['reblog', {
                         account: userToVote[0],
                         author: author,
@@ -397,11 +397,6 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
 
     globalState.system.operationInspections++
 
-    if (type === 'comments') {
-        dataToGet = await client.database.getState(`/@${author}/comments`)
-        authorContent = Object.values(dataToGet.content)
-    }
-
     let postCount = 0
     let totalPostValue = 0
     let valueData = [];
@@ -438,32 +433,6 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
                     scheduleTime = globalState.trackers[timeFrame].scheduleTime
                     timeName = timeFrame
                     timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
-
-                    return {
-                        signal : true,
-                        author : author,
-                        avg : avgValue,
-                        link : link,
-                        parentPerm : parentPermLink,
-                        age : minuteDiff,
-                        perm : permlink,
-                        timeFrame : timeFrame,
-                        scheduleTime : scheduleTime,
-                        timeName : timeName,
-                        profitChance : percentile
-                    }
-                }
-        }
-        return {signal : false}
-    } else if (type === 'comments') {
-        fs.appendFileSync('./logs/signalLog.txt', `Inspecting comment ==> AUTHOR: https://hive.blog/@${author}/comments -- REP:${authorRep} -- Post Count:${postCount} -- Current Voters:${currentVoters} -- Proftit Chance:${percentile} -- Avg Value:${avgValue}\n`)
-        for (timeFrame of globalState.system.timeFrames) {
-            if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS 
-                && avgValue >= globalState.trackers[timeFrame].comments.minAvg && percentile >= globalState.globalVars.PROFITMIN
-                && currentVoters <= globalState.globalVars.MAXVOTERS) {
-                    scheduleTime = globalState.trackers[timeFrame].scheduleTime
-                    timeName = timeFrame
-                    timeFrame = globalState.trackers[timeFrame].comments.pendingInspections
 
                     return {
                         signal : true,

@@ -4,7 +4,7 @@
     ],
 
     "GLOBALVARS" : {
-        "REHIVE" : true,
+        "REBLOG" : true,
         "FOLLOW" : true,
         "RFMINWEIGHT" : 33,
         "MINRC" : 80,
@@ -19,71 +19,61 @@
             "MINVP" : 97,
             "SCHEDULETIME" : 3.98,
             "BASEWEIGHT" : 1500,
-            "MINAVGPOST" : 3,
-            "MINAVGCOMMENT" : 2
+            "MINAVGPOST" : 3
         },
         "TWO" : {
             "MINVP" : 96.5,
             "SCHEDULETIME" : 14.88,
             "BASEWEIGHT" : 1450,
-            "MINAVGPOST" : 3,
-            "MINAVGCOMMENT" : 1.9
+            "MINAVGPOST" : 3
         },
         "THREE" : {
             "MINVP" : 96,
             "SCHEDULETIME" : 24.88,
             "BASEWEIGHT" : 1400,
-            "MINAVGPOST" : 2.75,
-            "MINAVGCOMMENT" : 1.8
+            "MINAVGPOST" : 2.75
         },
         "FOUR" : {
             "MINVP" : 95.5,
             "SCHEDULETIME" : 34.88,
             "BASEWEIGHT" : 1350,
-            "MINAVGPOST" : 2.5,
-            "MINAVGCOMMENT" : 1.7
+            "MINAVGPOST" : 2.5
         },
         "FIVE" : {
             "MINVP" : 95,
             "SCHEDULETIME" : 44.88,
             "BASEWEIGHT" : 1300,
-            "MINAVGPOST" : 2.25,
-            "MINAVGCOMMENT" : 1.6
+            "MINAVGPOST" : 2.25
         },
         "SIX" : {
             "MINVP" : 94.5,
             "SCHEDULETIME" : 54.88,
             "BASEWEIGHT" : 1250,
-            "MINAVGPOST" : 2,
-            "MINAVGCOMMENT" : 1.5
+            "MINAVGPOST" : 2
         },
         "SEVEN" : {
             "MINVP" : 94,
             "SCHEDULETIME" : 64.88,
             "BASEWEIGHT" : 1200,
-            "MINAVGPOST" : 1.75,
-            "MINAVGCOMMENT" : 1.4
+            "MINAVGPOST" : 1.75
         },
         "EIGHT" : {
             "MINVP" : 93.5,
             "SCHEDULETIME" : 74.88,
             "BASEWEIGHT" : 1150,
-            "MINAVGPOST" : 1.5,
-            "MINAVGCOMMENT" : 1.3
+            "MINAVGPOST" : 1.5
         },
         "NINE" : {
             "MINVP" : 93,
             "SCHEDULETIME" : 84.88,
             "BASEWEIGHT" : 1100,
-            "MINAVGPOST" : 1.25,
-            "MINAVGCOMMENT" : 1.2
+            "MINAVGPOST" : 1.25
         },
         "TEN" : {
             "MINVP" : 92.5,
             "SCHEDULETIME" : 94.88,
             "BASEWEIGHT" : 1050,
-            "MINAVGPOST" : 1,
-            "MINAVGCOMMENT" : 1
+            "MINAVGPOST" : 1
         }
     }
 }

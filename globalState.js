@@ -41,13 +41,6 @@ module.exports = globalState = {
                 votes: 0,
                 inspections: 0,
                 pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.ONE.MINAVGCOMMENT,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
             }
         },
 
@@ -59,13 +52,6 @@ module.exports = globalState = {
             scheduleTime : TRACKERS.TWO.SCHEDULETIME,
             posts : {
                 minAvg : TRACKERS.TWO.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.TWO.MINAVGCOMMENT,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -85,13 +71,6 @@ module.exports = globalState = {
                 votes: 0,
                 inspections: 0,
                 pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.THREE.MINAVGCOMMENT,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
             }
         },
 
@@ -103,13 +82,6 @@ module.exports = globalState = {
             scheduleTime : TRACKERS.FOUR.SCHEDULETIME,
             posts : {
                 minAvg : TRACKERS.FOUR.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.FOUR.MINAVGCOMMENT,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -129,13 +101,6 @@ module.exports = globalState = {
                 votes: 0,
                 inspections: 0,
                 pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.FIVE.MINAVGCOMMENT,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
             }
         },
 
@@ -147,13 +112,6 @@ module.exports = globalState = {
             scheduleTime : TRACKERS.SIX.SCHEDULETIME,
             posts : {
                 minAvg : TRACKERS.SIX.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.SIX.MINAVGCOMMENT,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -173,13 +131,6 @@ module.exports = globalState = {
                 votes: 0,
                 inspections: 0,
                 pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.SEVEN.MINAVGCOMMENT,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
             }
         },
 
@@ -191,13 +142,6 @@ module.exports = globalState = {
             scheduleTime : TRACKERS.EIGHT.SCHEDULETIME,
             posts : {
                 minAvg : TRACKERS.EIGHT.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.EIGHT.MINAVGCOMMENT,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -217,13 +161,6 @@ module.exports = globalState = {
                 votes: 0,
                 inspections: 0,
                 pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.NINE.MINAVGCOMMENT,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
             }
         },
 
@@ -235,13 +172,6 @@ module.exports = globalState = {
             scheduleTime : TRACKERS.TEN.SCHEDULETIME,
             posts : {
                 minAvg : TRACKERS.TEN.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                inspections: 0,
-                pendingInspections: []
-            },
-            comments: {
-                minAvg : TRACKERS.TEN.MINAVGCOMMENT,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
