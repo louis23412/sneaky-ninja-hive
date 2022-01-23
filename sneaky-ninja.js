@@ -24,9 +24,6 @@ fs.writeFileSync('./logs/signalLog.txt', `Sneaky ninja start time: ${globalState
 fs.writeFileSync('./logs/votelog.txt', `Sneaky ninja start time: ${globalState.system.startTime}\n--------------------------\n`)
 fs.writeFileSync('./logs/errorlog.txt', `Sneaky ninja start time: ${globalState.system.startTime}\n--------------------------\n`)
 
-console.clear()
-console.log('Starting up block stream...')
-
 const runNow = () => {
     stream.pipe(es.map(async (block, callback) => {
         callback(null, util.inspect(block, {colors: true, depth: null}) + '\n')
@@ -94,8 +91,12 @@ const runNow = () => {
     }))
 }
 
-try {
-    runNow()
-} catch (error) {
-    console.log('ooooops something went wrong! Restarting...')
-}
+process.on('UnhandledPromiseRejectionWarning', function(err){
+    console.log(err);
+    console.log('ooops something went wrong, restarting stream...')
+    runNow();  
+});
+
+console.clear()
+console.log('Starting up block stream...')
+runNow();
