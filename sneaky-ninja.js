@@ -91,6 +91,7 @@ const runNow = () => {
             }
         })
     }))
+    .on('error', function(e){runNow()})
 }
 
 process.on('UnhandledPromiseRejectionWarning', function(err){
