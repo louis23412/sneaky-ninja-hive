@@ -3,8 +3,7 @@
 
 2. ### Installation:
 * Clone this repo & cd into it <br>
-`git clone https://github.com/louis23412/sneaky-ninja.git` <br>
-`cd sneaky-ninja`
+`git clone https://github.com/louis23412/sneaky-ninja-hive.git && cd sneaky-ninja-hive` <br>
 
 * Install dependencies <br>
 `npm install`
@@ -29,25 +28,25 @@
    
 * Change the variables as needed:
    ```
-   "GLOBALVARS" : {
-      "ACTIVATEPOSTS" : true, => true to activate post voting / false to disable.
-      "ACTIVATECOMMENTS" : true, => true to activate comment voting / false to disable.
-      "ACTIVATELOGGING" : true, => true to activate tracker logging runtime / false to disable.
-      "MINREP" : 35, => Minimum reputation for the author of the content (Post or Comment)
-      "MAXACTIVEPOSTS" : 7, => Max active posts in the last 7 days (Post or comment)
-      "PROFITMIN" : -10, => Minimum profit chance to trigger upvotes (Can be negative. Formula used to calculate: (((q1 + q2 + q3) / 3) - avgval) / avgval
-      "MAXVOTERS" : 5 => Max voters allowed on the content being inspected to trigger an upvote
-   }
+    "GLOBALVARS" : {
+        "REBLOG" : true,
+        "FOLLOW" : true,
+        "RFMINWEIGHT" : 33,
+        "MINRC" : 80,
+        "MINREP" : 35,
+        "MAXACTIVEPOSTS" : 7,
+        "PROFITMIN" : 0.001,
+        "MAXVOTERS" : 5
+    }
    ```
 
 * Set properties for each tracker. Example:
    ```
    "ONE" : {
-      "MINVP" : 97, => Min VP needed for this category
-      "SCHEDULETIME" : 3.98, => Min post age / schedule time for this category
-      "BASEWEIGHT" : 1500, => Divide by 100 to get weight %. Base weight used to determine the final vote Weight (Formula used: Base Weight * Average Value)
-      "MINAVGPOST" : 3, => Minimum Average post value for this category
-      "MINAVGCOMMENT" : 2 => Minimun Average comment value for this category
+      "MINVP" : 97,
+      "SCHEDULETIME" : 3.98,
+      "BASEWEIGHT" : 1500, //Divide by 100 to get base voteweight. 1500 = 15%.
+      "MINAVGPOST" : 3
    }
    ```
    Each tracking category should be higher in MinVp than the next! So tracker ONE minVP should be > than tracker TWO minVP. (The globalProps file provided comes with my current setup running as example.)

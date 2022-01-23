@@ -14,16 +14,6 @@ const userNamesList = USERLIST.map(user => {
     return user[0];
 });
 
-const dir = './logs';
-
-if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-}
-
-fs.writeFileSync('./logs/signalLog.txt', `Sneaky ninja start time: ${globalState.system.startTime}\n--------------------------\n`)
-fs.writeFileSync('./logs/votelog.txt', `Sneaky ninja start time: ${globalState.system.startTime}\n--------------------------\n`)
-fs.writeFileSync('./logs/errorlog.txt', `Sneaky ninja start time: ${globalState.system.startTime}\n--------------------------\n`)
-
 const runNow = () => {
     stream.pipe(es.map(async (block, callback) => {
         callback(null, util.inspect(block, {colors: true, depth: null}) + '\n')
@@ -49,10 +39,10 @@ const runNow = () => {
         globalState.system.blockCounter ++
     
         if (globalState.system.blockCounter === 1) {
-            globalState.system.startSP = globalState.system.votingHivePower
+            globalState.system.startHP = globalState.system.votingHivePower
         }
     
-        const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startSP
+        const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
         const blockCatchRatio = `${actions.yt(actions.round((globalState.system.blockCounter / (actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%')}`
     
         console.log(`${actions.yt('*')} Status: ${voteStatus} || Runtime: ${actions.yt(actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins')} || Highest-VP: ${actions.yt(actions.round(globalState.system.votingPower, 3) + '%')} || Block Catch Ratio: ${blockCatchRatio}`)

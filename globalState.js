@@ -10,7 +10,7 @@ module.exports = globalState = {
         startTime : new Date(),
         blockCounter : 0,
         votingHivePower : 0,
-        startSP : 0,
+        startHP : 0,
         votingPower : 0,
         pendingAuthorList : [],
         fails : 0,

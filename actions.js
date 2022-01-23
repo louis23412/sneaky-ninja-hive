@@ -254,7 +254,6 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
                 if (err) {
                     globalState.trackers[timeName][type].errors++
                     globalState.system.totalErrors++
-                    fs.appendFileSync('./logs/errorlog.txt', `${err}\n`)
                 } else {
                     console.log(gt(`Vote success with a weight of ${(voteWeight) / 100}%!`));
                 }
@@ -311,7 +310,6 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
     } else if (newUserList.length === 0 ) {
         globalState.trackers[timeName][type].votes++
         globalState.system.totalVotes++
-        fs.appendFileSync('./logs/votelog.txt', `AUTHOR: ${author} -- LINK: ${link} -- DATE: ${new Date()} -- VOTED AFTER: ${age} mins -- Block-Id: ${blockid}\n---------------------------\n`)
     }
 }
 
@@ -425,7 +423,6 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
     let timeName = ''
 
     if (type === 'posts') {
-        fs.appendFileSync('./logs/signalLog.txt', `Inspecting post ==> AUTHOR: https://hive.blog/@${author}/posts -- REP:${authorRep} -- Post Count:${postCount} -- Current Voters:${currentVoters} -- Proftit Chance:${percentile} -- Avg Value:${avgValue}\n`)
         for (timeFrame of globalState.system.timeFrames) {
             if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS 
                 && avgValue >= globalState.trackers[timeFrame].posts.minAvg && percentile >= globalState.globalVars.PROFITMIN
