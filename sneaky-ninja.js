@@ -27,6 +27,8 @@ fs.writeFileSync('./logs/errorlog.txt', `Sneaky ninja start time: ${globalState.
 const runNow = () => {
     stream.pipe(es.map(async (block, callback) => {
         callback(null, util.inspect(block, {colors: true, depth: null}) + '\n')
+
+        globalState.system.accsLinked = userNamesList.length;
     
         try {
             globalState.system.votingPower = await actions.getVP(globalState);

@@ -18,7 +18,8 @@ module.exports = globalState = {
         totalVotes : 0,
         totalErrors : 0,
         totalInspections : 0,
-        rcList : {}
+        rcList : {},
+        accsLinked : 0
     },
 
     trackers : {

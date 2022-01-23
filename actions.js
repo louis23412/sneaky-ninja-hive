@@ -71,7 +71,7 @@ const logTrackers = (globalState) => {
             active_voters.push(displayVotingPower(globalState.trackers[timeRange].votingTracker, globalState))
         }
     }
-    console.log(`└─| Online voters:(${active_voters.length}): ${active_voters}`)
+    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): ${active_voters}`)
 }
 
 const setGlobalOnlineLists = (globalState) => {
