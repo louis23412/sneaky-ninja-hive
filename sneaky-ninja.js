@@ -5,10 +5,10 @@ const util = require('util');
 const actions = require('./actions');
 let globalState = require('./globalState')
 
-const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"], {failoverThreshold : 0});
-const stream = client.blockchain.getBlockStream('Latest');
+const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
 
-const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
+const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
+const stream = client.blockchain.getBlockStream('Latest');
 
 const userNamesList = USERLIST.map(user => {
     return user[0];
@@ -48,7 +48,7 @@ stream.pipe(es.map(async (block, callback) => {
     const blockCatchRatio = `${actions.yt(actions.round((globalState.system.blockCounter / (actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%')}`
 
     console.log(`${actions.yt('*')} Status: ${voteStatus} || Runtime: ${actions.yt(actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins')} || Highest-VP: ${actions.yt(actions.round(globalState.system.votingPower, 3) + '%')} || Block Catch Ratio: ${blockCatchRatio}`)
-    console.log(`${actions.yt('*')} Last block inspected ID: ${actions.yt(blockId)} || ${actions.yt(globalState.system.operationInspections)} operations detected in ${actions.yt(globalState.system.blockCounter)} blocks`)
+    console.log(`${actions.yt('*')} Last block inspected ID: ${actions.yt(blockId)} || ${actions.yt(globalState.system.operationInspections)} posts detected in ${actions.yt(globalState.system.blockCounter)} blocks`)
     console.log(`${actions.yt('*')} Accounts Linked: ${actions.yt(userNamesList.length)} || Total HP voting: ${actions.yt(globalState.system.votingHivePower)} || Run-time HP Gain: ${actions.yt(runtimeSPGain)} || Gain %: ${actions.yt((runtimeSPGain / globalState.system.votingHivePower) * 100)}`)
     console.log(`${actions.yt('*')} Total Votes: ${actions.yt(globalState.system.totalVotes)} || Total Vote Fails: ${actions.yt(globalState.system.totalErrors)} || Total Inspections: ${actions.yt(globalState.system.totalInspections)} || Total Pending inspections: ${actions.yt(globalState.system.pendingAuthorList.length)}`)
     console.log()

@@ -2,10 +2,10 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"], {failoverThreshold : 0});
-const rcapi = new dhive.RCAPI(client);
+const { USERLIST, RPCLIST, COLORS} = JSON.parse(fs.readFileSync('./globalProps.json'));
 
-const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
+const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
+const rcapi = new dhive.RCAPI(client);
 
 const userNamesList = USERLIST.map(user => {
     return user[0];
@@ -14,15 +14,28 @@ const userNamesList = USERLIST.map(user => {
 // Helpers :
 //----------------------------------------------------
 const yt = (txt) => {
-    return `\x1b[33m${txt}\x1b[0m`;
+    if (COLORS) {
+        return `\x1b[33m${txt}\x1b[0m`;
+    } else {
+        return txt
+    }
 };
 
 const rt = (txt) => {
-    return `\x1b[31m${txt}\x1b[0m`;
+    if (COLORS) {
+        return `\x1b[31m${txt}\x1b[0m`;
+    } else {
+        return txt
+    }
+    
 };
 
 const gt = (txt) => {
-    return `\x1b[32m${txt}\x1b[0m`;
+    if (COLORS) {
+        return `\x1b[32m${txt}\x1b[0m`;
+    } else {
+        return txt
+    }
 };
 
 const round = (value, decimals) => {
@@ -162,61 +175,61 @@ const getVP = async (globalState) => {
         }
 
         for (value of Object.entries(tempTracker)) {
-            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP 
+            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP && globalState.trackers.ONE.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.ONE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.ONE.onlineList.includes(value[0])) {
                     globalState.trackers.ONE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP && globalState.trackers.TWO.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TWO.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TWO.onlineList.includes(value[0])) {
                     globalState.trackers.TWO.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP && globalState.trackers.THREE.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.THREE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.THREE.onlineList.includes(value[0])) {
                     globalState.trackers.THREE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP && globalState.trackers.FOUR.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FOUR.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FOUR.onlineList.includes(value[0])) {
                     globalState.trackers.FOUR.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP && globalState.trackers.FIVE.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FIVE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FIVE.onlineList.includes(value[0])) {
                     globalState.trackers.FIVE.onlineList.push(value[0])
                 }
-            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP
+            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP && globalState.trackers.SIX.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SIX.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SIX.onlineList.includes(value[0])) {
                     globalState.trackers.SIX.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP && globalState.trackers.SEVEN.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SEVEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SEVEN.onlineList.includes(value[0])) {
                     globalState.trackers.SEVEN.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP && globalState.trackers.EIGHT.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.EIGHT.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.EIGHT.onlineList.includes(value[0])) {
                     globalState.trackers.EIGHT.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP && globalState.trackers.NINE.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.NINE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.NINE.onlineList.includes(value[0])) {
                     globalState.trackers.NINE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP
+            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP && globalState.trackers.TEN.active
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TEN.onlineList.includes(value[0])) {
@@ -268,7 +281,7 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
                         permlink: postperm
                     }]);
         
-                    console.log(`@${userToVote[0]} reblog => @${author}...`)
+                    console.log(`Reblog author => @${author}...`)
                       
                     hive.broadcast.customJson(wif, [], [userToVote[0]], 'follow', json, (err, result) => {
                         if (err) {
@@ -287,13 +300,13 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
                         what: ["blog"],
                     }]);
         
-                    console.log(`@${userToVote[0]} follow => @${author}...`)
+                    console.log(`Follow author => @${author}...`)
         
                     hive.broadcast.customJson(wif, [], [userToVote[0]], 'follow', json2, (err, result) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            console.log(gt(`@${userToVote[0]} follow success!`));
+                            console.log(gt(`Follow success!`));
                         }
                     });
                 }

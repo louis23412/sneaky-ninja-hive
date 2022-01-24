@@ -1,41 +1,38 @@
-1. ### Requirements:
-* [Node.js](https://nodejs.org/en/)
-
-2. ### Installation:
+1. ### Installation:
 * Clone this repo & cd into it <br>
 `git clone https://github.com/louis23412/sneaky-ninja-hive.git && cd sneaky-ninja-hive` <br>
 
 * Install dependencies <br>
 `npm install`
 
-3. ### Configuring variables & running the bot:
+2. ### Configuring variables & running the bot:
 * Open __globalProps.json__ & add your account(s) + key(s) <br>
    ##### Single account: <br>
    ```
    "USERLIST" : [
-       ["username_here", "KEY_HERE"]
+       ["usernameHere", "privatePostingKeyHere"]
    ]
    ```
    
    ##### Multiple accounts: <br>
    ```
    "USERLIST" : [
-       ["username_here", "KEY_HERE"],
-       ["username_here", "KEY_HERE"],
-       ["username_here", "KEY_HERE"]
+       ["usernameHere", "privatePostingKeyHere"],
+       ["usernameHere", "privatePostingKeyHere"],
+       ["usernameHere", "privatePostingKeyHere"]
    ]
    ```
    
 * Change the variables as needed:
    ```
     "GLOBALVARS" : {
-        "REBLOG" : true,
-        "FOLLOW" : true,
+        "REBLOG" : false,
+        "FOLLOW" : false,
         "RFMINWEIGHT" : 33,
         "MINRC" : 80,
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "PROFITMIN" : 0.001,
+        "PROFITMIN" : 10,
         "MAXVOTERS" : 5
     }
    ```
@@ -46,7 +43,8 @@
       "MINVP" : 97,
       "SCHEDULETIME" : 3.98,
       "BASEWEIGHT" : 1500, //Divide by 100 to get base voteweight. 1500 = 15%.
-      "MINAVGPOST" : 3
+      "MINAVGPOST" : 3,
+      "ACTIVE" : true
    }
    ```
    Each tracking category should be higher in MinVp than the next! So tracker ONE minVP should be > than tracker TWO minVP. (The globalProps file provided comes with my current setup running as example.)

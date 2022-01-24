@@ -30,6 +30,7 @@ module.exports = globalState = {
         },
 
         'ONE' : {
+            active : TRACKERS.ONE.ACTIVE,
             baseWeight : TRACKERS.ONE.BASEWEIGHT,
             minVP : TRACKERS.ONE.MINVP,
             onlineList : [],
@@ -45,6 +46,7 @@ module.exports = globalState = {
         },
 
         'TWO' : {
+            active : TRACKERS.TWO.ACTIVE,
             baseWeight : TRACKERS.TWO.BASEWEIGHT,
             minVP : TRACKERS.TWO.MINVP,
             onlineList : [],
@@ -60,6 +62,7 @@ module.exports = globalState = {
         },
 
         'THREE' : {
+            active : TRACKERS.THREE.ACTIVE,
             baseWeight : TRACKERS.THREE.BASEWEIGHT,
             minVP : TRACKERS.THREE.MINVP,
             onlineList : [],
@@ -75,6 +78,7 @@ module.exports = globalState = {
         },
 
         'FOUR' : {
+            active : TRACKERS.FOUR.ACTIVE,
             baseWeight : TRACKERS.FOUR.BASEWEIGHT,
             minVP : TRACKERS.FOUR.MINVP,
             onlineList : [],
@@ -90,6 +94,7 @@ module.exports = globalState = {
         },
 
         'FIVE' : {
+            active : TRACKERS.FIVE.ACTIVE,
             baseWeight : TRACKERS.FIVE.BASEWEIGHT,
             minVP : TRACKERS.FIVE.MINVP,
             onlineList : [],
@@ -105,6 +110,7 @@ module.exports = globalState = {
         },
 
         'SIX' : {
+            active : TRACKERS.SIX.ACTIVE,
             baseWeight : TRACKERS.SIX.BASEWEIGHT,
             minVP : TRACKERS.SIX.MINVP,
             onlineList : [],
@@ -120,6 +126,7 @@ module.exports = globalState = {
         },
 
         'SEVEN' : {
+            active : TRACKERS.SEVEN.ACTIVE,
             baseWeight : TRACKERS.SEVEN.BASEWEIGHT,
             minVP : TRACKERS.SEVEN.MINVP,
             onlineList : [],
@@ -135,6 +142,7 @@ module.exports = globalState = {
         },
 
         'EIGHT' : {
+            active : TRACKERS.EIGHT.ACTIVE,
             baseWeight : TRACKERS.EIGHT.BASEWEIGHT,
             minVP : TRACKERS.EIGHT.MINVP,
             onlineList : [],
@@ -150,6 +158,7 @@ module.exports = globalState = {
         },
 
         'NINE' : {
+            active : TRACKERS.NINE.ACTIVE,
             baseWeight : TRACKERS.NINE.BASEWEIGHT,
             minVP : TRACKERS.NINE.MINVP,
             onlineList : [],
@@ -165,6 +174,7 @@ module.exports = globalState = {
         },
 
         'TEN' : {
+            active : TRACKERS.TEN.ACTIVE,
             baseWeight : TRACKERS.TEN.BASEWEIGHT,
             minVP : TRACKERS.TEN.MINVP,
             onlineList : [],

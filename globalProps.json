@@ -1,16 +1,23 @@
 {
     "USERLIST" : [
-        ["username_here", "KEY_HERE"]
+        ["gingerninja", "privatePostingKeyHere"]
     ],
 
+    "RPCLIST" : [
+        "https://anyx.io", 
+        "https://rpc.ausbit.dev/"
+    ],
+
+    "COLORS" : false,
+
     "GLOBALVARS" : {
-        "REBLOG" : true,
-        "FOLLOW" : true,
+        "REBLOG" : false,
+        "FOLLOW" : false,
         "RFMINWEIGHT" : 33,
         "MINRC" : 80,
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "PROFITMIN" : 0.001,
+        "PROFITMIN" : 10,
         "MAXVOTERS" : 5
     },
 
@@ -19,61 +26,71 @@
             "MINVP" : 97,
             "SCHEDULETIME" : 3.98,
             "BASEWEIGHT" : 1500,
-            "MINAVGPOST" : 3
+            "MINAVGPOST" : 3,
+            "ACTIVE" : true
         },
         "TWO" : {
             "MINVP" : 96.5,
             "SCHEDULETIME" : 14.88,
             "BASEWEIGHT" : 1450,
-            "MINAVGPOST" : 3
+            "MINAVGPOST" : 3,
+            "ACTIVE" : true
         },
         "THREE" : {
             "MINVP" : 96,
             "SCHEDULETIME" : 24.88,
             "BASEWEIGHT" : 1400,
-            "MINAVGPOST" : 2.75
+            "MINAVGPOST" : 2.75,
+            "ACTIVE" : true
         },
         "FOUR" : {
             "MINVP" : 95.5,
             "SCHEDULETIME" : 34.88,
             "BASEWEIGHT" : 1350,
-            "MINAVGPOST" : 2.5
+            "MINAVGPOST" : 2.5,
+            "ACTIVE" : true
         },
         "FIVE" : {
             "MINVP" : 95,
             "SCHEDULETIME" : 44.88,
             "BASEWEIGHT" : 1300,
-            "MINAVGPOST" : 2.25
+            "MINAVGPOST" : 2.25,
+            "ACTIVE" : true
         },
         "SIX" : {
             "MINVP" : 94.5,
             "SCHEDULETIME" : 54.88,
             "BASEWEIGHT" : 1250,
-            "MINAVGPOST" : 2
+            "MINAVGPOST" : 2,
+            "ACTIVE" : true
         },
         "SEVEN" : {
             "MINVP" : 94,
             "SCHEDULETIME" : 64.88,
             "BASEWEIGHT" : 1200,
-            "MINAVGPOST" : 1.75
+            "MINAVGPOST" : 1.75,
+            "ACTIVE" : true
         },
         "EIGHT" : {
             "MINVP" : 93.5,
             "SCHEDULETIME" : 74.88,
             "BASEWEIGHT" : 1150,
-            "MINAVGPOST" : 1.5
+            "MINAVGPOST" : 1.5,
+            "ACTIVE" : true
         },
         "NINE" : {
             "MINVP" : 93,
             "SCHEDULETIME" : 84.88,
             "BASEWEIGHT" : 1100,
-            "MINAVGPOST" : 1.25
+            "MINAVGPOST" : 1.25,
+            "ACTIVE" : true
         },
         "TEN" : {
             "MINVP" : 92.5,
             "SCHEDULETIME" : 94.88,
             "BASEWEIGHT" : 1050,
-            "MINAVGPOST" : 1
+            "MINAVGPOST" : 1,
+            "ACTIVE" : true
         }
     }
 }
