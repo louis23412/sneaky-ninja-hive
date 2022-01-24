@@ -261,9 +261,8 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
     if (newUserList.length > 0) {
         userToVote = newUserList[0]
 
-        const wif = hive.auth.toWif(userToVote[0], userToVote[1], 'posting');
         try {
-            hive.broadcast.vote(wif, userToVote[0], author, postperm, voteWeight, (err, result) => {
+            hive.broadcast.vote(userToVote[1], userToVote[0], author, postperm, voteWeight, (err, result) => {
                 if (err) {
                     globalState.trackers[timeName][type].errors++
                     globalState.system.totalErrors++
@@ -283,7 +282,7 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
         
                     console.log(`Reblog author => @${author}...`)
                       
-                    hive.broadcast.customJson(wif, [], [userToVote[0]], 'follow', json, (err, result) => {
+                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
                         if (err) {
                             console.log(err)
                         } else {
@@ -302,7 +301,7 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
         
                     console.log(`Follow author => @${author}...`)
         
-                    hive.broadcast.customJson(wif, [], [userToVote[0]], 'follow', json2, (err, result) => {
+                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
                         if (err) {
                             console.log(err)
                         } else {
