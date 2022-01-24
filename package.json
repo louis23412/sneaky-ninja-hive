@@ -4,13 +4,14 @@
   "description": "",
   "main": "sneaky-ninja.js",
   "scripts": {
-    "start": "node sneaky-ninja.js"
+    "start": "pm2 start sneaky-ninja.js && pm2 monit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@hiveio/dhive": "^1.1.1",
     "@hiveio/hive-js": "^2.0.4",
-    "event-stream": "^4.0.1"
+    "event-stream": "^4.0.1",
+    "pm2": "^5.1.2"
   }
 }
