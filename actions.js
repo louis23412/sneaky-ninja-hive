@@ -2,7 +2,7 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"]);
+const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"], {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
 
 const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));

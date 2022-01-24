@@ -4,7 +4,8 @@
   "description": "",
   "main": "sneaky-ninja.js",
   "scripts": {
-    "start": "pm2 start sneaky-ninja.js && pm2 monit"
+    "start": "pm2 start sneaky-ninja.js && pm2 monit",
+    "stop" : "pm2 stop sneaky-ninja.js"
   },
   "author": "",
   "license": "ISC",

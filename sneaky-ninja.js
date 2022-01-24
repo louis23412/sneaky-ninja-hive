@@ -5,7 +5,7 @@ const util = require('util');
 const actions = require('./actions');
 let globalState = require('./globalState')
 
-const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"]);
+const client = new dhive.Client(["https://anyx.io", "https://rpc.ausbit.dev/"], {failoverThreshold : 0});
 const stream = client.blockchain.getBlockStream('Latest');
 
 const { USERLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
