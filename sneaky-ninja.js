@@ -4,7 +4,7 @@ const es = require('event-stream');
 const actions = require('./actions');
 let globalState = require('./globalState');
 
-const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
+const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const stream = client.blockchain.getBlockStream('Latest');

@@ -2,7 +2,7 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const { USERLIST, RPCLIST, COLORS} = JSON.parse(fs.readFileSync('./globalProps.json'));
+const { USERLIST, RPCLIST, COLORS} = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
@@ -175,61 +175,61 @@ const getVP = async (globalState) => {
         }
 
         for (value of Object.entries(tempTracker)) {
-            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP && globalState.trackers.ONE.active
+            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.ONE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.ONE.onlineList.includes(value[0])) {
                     globalState.trackers.ONE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP && globalState.trackers.TWO.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TWO.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TWO.onlineList.includes(value[0])) {
                     globalState.trackers.TWO.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP && globalState.trackers.THREE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.THREE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.THREE.onlineList.includes(value[0])) {
                     globalState.trackers.THREE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP && globalState.trackers.FOUR.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FOUR.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FOUR.onlineList.includes(value[0])) {
                     globalState.trackers.FOUR.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP && globalState.trackers.FIVE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FIVE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FIVE.onlineList.includes(value[0])) {
                     globalState.trackers.FIVE.onlineList.push(value[0])
                 }
-            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP && globalState.trackers.SIX.active
+            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SIX.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SIX.onlineList.includes(value[0])) {
                     globalState.trackers.SIX.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP && globalState.trackers.SEVEN.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SEVEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SEVEN.onlineList.includes(value[0])) {
                     globalState.trackers.SEVEN.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP && globalState.trackers.EIGHT.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.EIGHT.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.EIGHT.onlineList.includes(value[0])) {
                     globalState.trackers.EIGHT.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP && globalState.trackers.NINE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.NINE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.NINE.onlineList.includes(value[0])) {
                     globalState.trackers.NINE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP && globalState.trackers.TEN.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TEN.onlineList.includes(value[0])) {

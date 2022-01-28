@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { GLOBALVARS } = JSON.parse(fs.readFileSync('./globalProps.json'));
+const { GLOBALVARS } = JSON.parse(fs.readFileSync('./settings.json'));
 
 module.exports = globalState = {
     globalVars : { ...GLOBALVARS },
