@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { TRACKERS, GLOBALVARS } = JSON.parse(fs.readFileSync('./globalProps.json'));
+const { GLOBALVARS } = JSON.parse(fs.readFileSync('./globalProps.json'));
 
 module.exports = globalState = {
     globalVars : { ...GLOBALVARS },
@@ -19,7 +19,9 @@ module.exports = globalState = {
         totalErrors : 0,
         totalInspections : 0,
         rcList : {},
-        accsLinked : 0
+        accsLinked : 0,
+        streamEnd : 0,
+        streamErr : 0
     },
 
     trackers : {
@@ -30,14 +32,13 @@ module.exports = globalState = {
         },
 
         'ONE' : {
-            active : TRACKERS.ONE.ACTIVE,
-            baseWeight : TRACKERS.ONE.BASEWEIGHT,
-            minVP : TRACKERS.ONE.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT,
+            minVP : GLOBALVARS.VPRANGESTOP,
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.ONE.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME,
             posts : {
-                minAvg : TRACKERS.ONE.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -46,14 +47,13 @@ module.exports = globalState = {
         },
 
         'TWO' : {
-            active : TRACKERS.TWO.ACTIVE,
-            baseWeight : TRACKERS.TWO.BASEWEIGHT,
-            minVP : TRACKERS.TWO.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 50,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 1),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.TWO.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 15,
             posts : {
-                minAvg : TRACKERS.TWO.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -62,14 +62,13 @@ module.exports = globalState = {
         },
 
         'THREE' : {
-            active : TRACKERS.THREE.ACTIVE,
-            baseWeight : TRACKERS.THREE.BASEWEIGHT,
-            minVP : TRACKERS.THREE.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 100,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 2),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.THREE.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 30,
             posts : {
-                minAvg : TRACKERS.THREE.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -78,14 +77,13 @@ module.exports = globalState = {
         },
 
         'FOUR' : {
-            active : TRACKERS.FOUR.ACTIVE,
-            baseWeight : TRACKERS.FOUR.BASEWEIGHT,
-            minVP : TRACKERS.FOUR.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 150,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 3),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.FOUR.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 45,
             posts : {
-                minAvg : TRACKERS.FOUR.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -94,14 +92,13 @@ module.exports = globalState = {
         },
 
         'FIVE' : {
-            active : TRACKERS.FIVE.ACTIVE,
-            baseWeight : TRACKERS.FIVE.BASEWEIGHT,
-            minVP : TRACKERS.FIVE.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 200,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 4),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.FIVE.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 60,
             posts : {
-                minAvg : TRACKERS.FIVE.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -110,14 +107,13 @@ module.exports = globalState = {
         },
 
         'SIX' : {
-            active : TRACKERS.SIX.ACTIVE,
-            baseWeight : TRACKERS.SIX.BASEWEIGHT,
-            minVP : TRACKERS.SIX.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 250,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 5),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.SIX.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 75,
             posts : {
-                minAvg : TRACKERS.SIX.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -126,14 +122,13 @@ module.exports = globalState = {
         },
 
         'SEVEN' : {
-            active : TRACKERS.SEVEN.ACTIVE,
-            baseWeight : TRACKERS.SEVEN.BASEWEIGHT,
-            minVP : TRACKERS.SEVEN.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 300,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 6),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.SEVEN.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 90,
             posts : {
-                minAvg : TRACKERS.SEVEN.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -142,14 +137,13 @@ module.exports = globalState = {
         },
 
         'EIGHT' : {
-            active : TRACKERS.EIGHT.ACTIVE,
-            baseWeight : TRACKERS.EIGHT.BASEWEIGHT,
-            minVP : TRACKERS.EIGHT.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 350,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 7),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.EIGHT.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 105,
             posts : {
-                minAvg : TRACKERS.EIGHT.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -158,14 +152,13 @@ module.exports = globalState = {
         },
 
         'NINE' : {
-            active : TRACKERS.NINE.ACTIVE,
-            baseWeight : TRACKERS.NINE.BASEWEIGHT,
-            minVP : TRACKERS.NINE.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 400,
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 8),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.NINE.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 120,
             posts : {
-                minAvg : TRACKERS.NINE.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -174,14 +167,13 @@ module.exports = globalState = {
         },
 
         'TEN' : {
-            active : TRACKERS.TEN.ACTIVE,
-            baseWeight : TRACKERS.TEN.BASEWEIGHT,
-            minVP : TRACKERS.TEN.MINVP,
+            baseWeight : GLOBALVARS.BASEWEIGHT - 450,
+            minVP : GLOBALVARS.VPRANGESTART,
             onlineList : [],
             votingTracker : {},
-            scheduleTime : TRACKERS.TEN.SCHEDULETIME,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 135,
             posts : {
-                minAvg : TRACKERS.TEN.MINAVGPOST,
+                minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,

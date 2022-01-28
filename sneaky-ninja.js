@@ -1,26 +1,20 @@
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 const es = require('event-stream');
-const util = require('util');
 const actions = require('./actions');
-let globalState = require('./globalState')
+let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./globalProps.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
+const stream = client.blockchain.getBlockStream('Latest');
 
 const userNamesList = USERLIST.map(user => {
     return user[0];
 });
 
-const mainStream = () => {
-    console.clear()
-    console.log('Starting up block stream...')
-
-    const stream = client.blockchain.getBlockStream('Latest');
+const streamNow = () => {
     stream.pipe(es.map(async (block, callback) => {
-        callback(null, util.inspect(block, {colors: true, depth: null}) + '\n')
-    
         globalState.system.accsLinked = userNamesList.length;
     
         try {
@@ -30,10 +24,10 @@ const mainStream = () => {
         }
         actions.setGlobalOnlineLists(globalState);
     
-        let voteStatus = actions.rt(`Recharging Hive Power...`)
+        let voteStatus = actions.rt(`Recharging Hive Power`)
         for (timeFrame of [...globalState.system.timeFrames].reverse()) {
             if (globalState.system.votingPower > globalState.trackers[timeFrame].minVP) {
-                voteStatus = actions.gt(`Curating content...`);
+                voteStatus = actions.gt(`Curating content`);
             }
         }
     
@@ -52,6 +46,7 @@ const mainStream = () => {
         console.log(`${actions.yt('*')} Last block inspected ID: ${actions.yt(blockId)} || ${actions.yt(globalState.system.operationInspections)} posts detected in ${actions.yt(globalState.system.blockCounter)} blocks`)
         console.log(`${actions.yt('*')} Accounts Linked: ${actions.yt(userNamesList.length)} || Total HP voting: ${actions.yt(globalState.system.votingHivePower)} || Run-time HP Gain: ${actions.yt(runtimeSPGain)} || Gain %: ${actions.yt((runtimeSPGain / globalState.system.votingHivePower) * 100)}`)
         console.log(`${actions.yt('*')} Total Votes: ${actions.yt(globalState.system.totalVotes)} || Total Vote Fails: ${actions.yt(globalState.system.totalErrors)} || Total Inspections: ${actions.yt(globalState.system.totalInspections)} || Total Pending inspections: ${actions.yt(globalState.system.pendingAuthorList.length)}`)
+        console.log(`* Streams errors: ${globalState.system.streamErr} - Stream restarts: ${globalState.system.streamErr}`)
         console.log()
     
         actions.logTrackers(globalState)
@@ -84,11 +79,14 @@ const mainStream = () => {
             }
         })
     }))
+    .on('end', () => {
+        globalState.system.streamEnd++;
+        streamNow();
+    })
+    .on('error', () => {
+        globalState.system.streamErr++;
+    })
 }
 
-try {
-    mainStream();
-} catch (error) {
-    console.log('Stream failed! Restarting...')
-    mainStream();
-}
+console.log('Starting up block stream...')
+streamNow();
