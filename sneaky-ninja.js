@@ -1,18 +1,38 @@
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 const es = require('event-stream');
-const actions = require('./actions');
-let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
+//Update config for hivejs with new rpc list before importing actions & globalstate:
+//----------------------------------------------------
+let configFile = JSON.parse(fs.readFileSync('./node_modules/@hiveio/hive-js/config.json'));
+
+configFile.uri = RPCLIST[0]
+configFile.url = RPCLIST[0]
+altEnds = []
+RPCLIST.forEach(rpc => {
+    if (!(rpc == RPCLIST[0])) {
+        altEnds.push(rpc);
+    }
+});
+configFile.alternative_api_endpoints = altEnds;
+configFile.failover_threshold = 0;
+configFile.transport = 'http';
+
+fs.writeFileSync('./node_modules/@hiveio/hive-js/config.json', JSON.stringify(configFile));
+
+const actions = require('./actions');
+let globalState = require('./globalState');
+//----------------------------------------------------
+
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 
-const userNamesList = USERLIST.map(user => {
-    return user[0];
-});
-
 const streamNow = () => {
+    const userNamesList = USERLIST.map(user => {
+        return user[0];
+    });
+
     const stream = client.blockchain.getBlockStream('Latest')
     .on('error', () => {
         console.log('Stream error!!!')
@@ -67,7 +87,7 @@ const streamNow = () => {
     
             if (typeOf == 'comment' && operationDetails.parent_author == '') {
                 try {
-                    const answer = await actions.ScheduleFlag(globalState, operationDetails, 'posts')
+                    const answer = await actions.ScheduleFlag(globalState, operationDetails)
                     if (answer.signal == true && !globalState.system.pendingAuthorList.includes(answer.author)) {
                         answer.timeFrame.push(answer.author)
                         globalState.system.pendingAuthorList.push(answer.author)

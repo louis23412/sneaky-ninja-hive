@@ -409,32 +409,30 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
     let scheduleTime = ''
     let timeName = ''
 
-    if (type == 'posts') {
-        for (timeFrame of globalState.system.timeFrames) {
-            if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
-                && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
-                && percentile > 0) {
-                    scheduleTime = globalState.trackers[timeFrame].scheduleTime
-                    timeName = timeFrame
-                    timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
+    for (timeFrame of globalState.system.timeFrames) {
+        if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
+            && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
+            && percentile > 0) {
+                scheduleTime = globalState.trackers[timeFrame].scheduleTime
+                timeName = timeFrame
+                timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
 
-                    return {
-                        signal : true,
-                        author : author,
-                        avg : avgValue,
-                        link : link,
-                        parentPerm : parentPermLink,
-                        age : minuteDiff,
-                        perm : permlink,
-                        timeFrame : timeFrame,
-                        scheduleTime : scheduleTime,
-                        timeName : timeName,
-                        profitChance : percentile
-                    }
+                return {
+                    signal : true,
+                    author : author,
+                    avg : avgValue,
+                    link : link,
+                    parentPerm : parentPermLink,
+                    age : minuteDiff,
+                    perm : permlink,
+                    timeFrame : timeFrame,
+                    scheduleTime : scheduleTime,
+                    timeName : timeName,
+                    profitChance : percentile
                 }
-        }
-        return {signal : false}
+            }
     }
+    return {signal : false}
 }
 //----------------------------------------------------
 
