@@ -3,28 +3,26 @@
         ["usernameHere", "privatePostingKeyHere"]
     ],
 
-    "RPCLIST" : [
-        "https://anyx.io",
-        "https://rpc.ausbit.dev/"
-    ],
-
-    "COLORS" : false,
-
     "GLOBALVARS" : {
-        "REBLOG" : false,
-        "FOLLOW" : false,
-        "RFMINWEIGHT" : 33,
+        "REBLOG" : true,
+        "FOLLOW" : true,
+        "RFMINWEIGHT" : 100,
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "PROFITMIN" : 33,
-        "MAXVOTERS" : 0,
+        "MAXVOTERS" : 2,
+        "BASEWEIGHT" : 1500,
+        "VWMODE" : "SCALE",
+        "MINAVGPOST" : 3,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 90,
-        "VPRANGESTOP" : 100,
-        "MINSCHEDULETIME" : 14.99,
-        "BASEWEIGHT" : 1500,
-        "MINAVGPOST" : 3
-    }
+        "VPRANGESTART" : 92,
+        "VPRANGESTOP" : 97,
+        "MINSCHEDULETIME" : 4.88
+    },
+
+    "RPCLIST" : [
+        "https://anyx.io",
+        "https://rpc.ausbit.dev/"
+    ]
 }
