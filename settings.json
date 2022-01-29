@@ -10,19 +10,30 @@
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "MAXVOTERS" : 2,
+        "MAXVOTERS" : 5,
         "BASEWEIGHT" : 1500,
         "VWMODE" : "SCALE",
         "MINAVGPOST" : 3,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 92,
+        "VPRANGESTART" : 80,
         "VPRANGESTOP" : 97,
         "MINSCHEDULETIME" : 4.88
     },
 
     "RPCLIST" : [
+        "https://api.hive.blog",
+        "https://api.openhive.network",
         "https://anyx.io",
-        "https://rpc.ausbit.dev/"
+        "https://hived.privex.io",
+        "https://rpc.ausbit.dev",
+        "https://techcoderx.com",
+        "https://rpc.ecency.com",
+        "https://hive.roelandp.nl",
+        "https://hived.emre.sh",
+        "https://api.deathwing.me",
+        "https://api.c0ff33a.uk",
+        "https://hive-api.arcange.eu",
+        "https://api.pharesim.me"
     ]
 }

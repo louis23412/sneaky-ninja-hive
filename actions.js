@@ -324,11 +324,6 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             const acceptingPayment = Number(PostDetails.max_accepted_payout.replace(' HBD', ''))
             const totalVoters = Number(PostDetails.active_votes.length)
 
-            if (isNaN(totalVoters)) {
-                console.log('Problem found!');
-                process.exit();
-            }
-
             console.log(`Inspection time for ${'@' + author}!`)
             console.log(`Content-Age: ${round(MinuteDiff, 2)} -- Value: ${postValue} -- voters: ${totalVoters}`)
 
