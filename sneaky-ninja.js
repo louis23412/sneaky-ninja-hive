@@ -73,8 +73,8 @@ const streamNow = () => {
         console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Block Catch Ratio: ${blockCatchRatio}`)
         console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
         console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
-        console.log(`* Total Votes: ${globalState.system.totalVotes} || Total Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending inspections: ${globalState.system.pendingAuthorList.length}`)
-        console.log(`* Streams errors: ${globalState.system.streamErr} || Stream restarts: ${globalState.system.streamErr} || Voteweight mode: ${vwModeStatus}`)
+        console.log(`* Total Votes: ${globalState.system.totalVotes} || Total Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+        console.log(`* Stream errors: ${globalState.system.streamErr} || Voteweight mode: ${vwModeStatus}`)
         console.log()
     
         actions.logTrackers(globalState)
