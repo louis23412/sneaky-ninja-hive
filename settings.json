@@ -10,21 +10,21 @@
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "MAXVOTERS" : 5,
-        "BASEWEIGHT" : 1500,
-        "VWMODE" : "SCALE",
         "MINAVGPOST" : 3,
+        "MAXVOTERS" : 5,
+        "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 80,
+        "VPRANGESTART" : 92,
         "VPRANGESTOP" : 97,
-        "MINSCHEDULETIME" : 4.88
+        "BASEWEIGHT" : 15,
+        "VWSCALE" : true
     },
 
     "RPCLIST" : [
+        "https://anyx.io",
         "https://api.hive.blog",
         "https://api.openhive.network",
-        "https://anyx.io",
         "https://hived.privex.io",
         "https://rpc.ausbit.dev",
         "https://techcoderx.com",

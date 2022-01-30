@@ -335,9 +335,12 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             })
 
             if (totalVoters <= globalState.globalVars.MAXVOTERS && (postValue / avgValue) <= 0.025 && votesignal == true && acceptingPayment > 0) {
-                let newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
-                if (newVoteWeight > 10000) {
-                    newVoteWeight = 10000;
+                let newVoteWeight = globalState.trackers[timeName].baseWeight;
+                if (globalState.globalVars.VWSCALE == true) {
+                    newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
+                    if (newVoteWeight > 10000) {
+                        newVoteWeight = 10000;
+                    }
                 }
 
                 if (globalState.trackers.onlineVotersList[timeName].length > 0) {

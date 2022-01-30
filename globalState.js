@@ -32,7 +32,7 @@ module.exports = globalState = {
         },
 
         'ONE' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100),
             minVP : GLOBALVARS.VPRANGESTOP,
             onlineList : [],
             votingTracker : {},
@@ -47,7 +47,7 @@ module.exports = globalState = {
         },
 
         'TWO' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 50,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 50,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 1),
             onlineList : [],
             votingTracker : {},
@@ -62,7 +62,7 @@ module.exports = globalState = {
         },
 
         'THREE' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 100,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 100,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 2),
             onlineList : [],
             votingTracker : {},
@@ -77,7 +77,7 @@ module.exports = globalState = {
         },
 
         'FOUR' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 150,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 150,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 3),
             onlineList : [],
             votingTracker : {},
@@ -92,7 +92,7 @@ module.exports = globalState = {
         },
 
         'FIVE' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 200,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 200,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 4),
             onlineList : [],
             votingTracker : {},
@@ -107,7 +107,7 @@ module.exports = globalState = {
         },
 
         'SIX' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 250,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 250,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 5),
             onlineList : [],
             votingTracker : {},
@@ -122,7 +122,7 @@ module.exports = globalState = {
         },
 
         'SEVEN' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 300,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 300,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 6),
             onlineList : [],
             votingTracker : {},
@@ -137,7 +137,7 @@ module.exports = globalState = {
         },
 
         'EIGHT' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 350,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 350,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 7),
             onlineList : [],
             votingTracker : {},
@@ -152,7 +152,7 @@ module.exports = globalState = {
         },
 
         'NINE' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 400,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 400,
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 8),
             onlineList : [],
             votingTracker : {},
@@ -167,7 +167,7 @@ module.exports = globalState = {
         },
 
         'TEN' : {
-            baseWeight : GLOBALVARS.BASEWEIGHT - 450,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 450,
             minVP : GLOBALVARS.VPRANGESTART,
             onlineList : [],
             votingTracker : {},

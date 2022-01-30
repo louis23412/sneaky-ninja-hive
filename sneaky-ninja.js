@@ -1,29 +1,26 @@
 const dhive = require('@hiveio/dhive')
+const hive = require('@hiveio/hive-js');
 const fs = require('fs');
 const es = require('event-stream');
+const actions = require('./actions');
+let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
-//Update config for hivejs with new rpc list before importing actions & globalstate:
+//Update config for hivejs with new rpc list:
 //----------------------------------------------------
-let configFile = JSON.parse(fs.readFileSync('./node_modules/@hiveio/hive-js/config.json'));
-
-configFile.uri = RPCLIST[0]
-configFile.url = RPCLIST[0]
 altEnds = []
 RPCLIST.forEach(rpc => {
     if (!(rpc == RPCLIST[0])) {
         altEnds.push(rpc);
     }
 });
-configFile.alternative_api_endpoints = altEnds;
-configFile.failover_threshold = 0;
-configFile.transport = 'http';
 
-fs.writeFileSync('./node_modules/@hiveio/hive-js/config.json', JSON.stringify(configFile));
-
-const actions = require('./actions');
-let globalState = require('./globalState');
+hive.config.uri = RPCLIST[0];
+hive.config.url = RPCLIST[0];
+hive.config.alternative_api_endpoints = altEnds;
+hive.config.failover_threshold = 0;
+hive.config.transport = 'http';
 //----------------------------------------------------
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
@@ -56,6 +53,11 @@ const streamNow = () => {
                 voteStatus = `Curating content`;
             }
         }
+
+        let vwModeStatus = "FIXED";
+        if (globalState.globalVars.VWSCALE == true) {
+            vwModeStatus = "SCALE";
+        }
     
         const data = block.transactions
         const blockId = block.block_id
@@ -72,7 +74,7 @@ const streamNow = () => {
         console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
         console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
         console.log(`* Total Votes: ${globalState.system.totalVotes} || Total Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending inspections: ${globalState.system.pendingAuthorList.length}`)
-        console.log(`* Streams errors: ${globalState.system.streamErr} || Stream restarts: ${globalState.system.streamErr} || Voteweight mode: ${globalState.globalVars.VWMODE}`)
+        console.log(`* Streams errors: ${globalState.system.streamErr} || Stream restarts: ${globalState.system.streamErr} || Voteweight mode: ${vwModeStatus}`)
         console.log()
     
         actions.logTrackers(globalState)
