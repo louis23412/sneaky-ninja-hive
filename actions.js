@@ -2,7 +2,7 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const { USERLIST, RPCLIST, COLORS} = JSON.parse(fs.readFileSync('./globalProps.json'));
+const { USERLIST, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
@@ -13,31 +13,6 @@ const userNamesList = USERLIST.map(user => {
 
 // Helpers :
 //----------------------------------------------------
-const yt = (txt) => {
-    if (COLORS) {
-        return `\x1b[33m${txt}\x1b[0m`;
-    } else {
-        return txt
-    }
-};
-
-const rt = (txt) => {
-    if (COLORS) {
-        return `\x1b[31m${txt}\x1b[0m`;
-    } else {
-        return txt
-    }
-    
-};
-
-const gt = (txt) => {
-    if (COLORS) {
-        return `\x1b[32m${txt}\x1b[0m`;
-    } else {
-        return txt
-    }
-};
-
 const round = (value, decimals) => {
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 };
@@ -69,7 +44,7 @@ const calculateProfit = (arr, avgval) => {
 
 const displayVotingPower = (trackerObject, globalState) => {
     const votingList = Object.entries(trackerObject).map(acc => {
-        return yt(`@${acc[0]}(VP:${acc[1].percentage / 100}% - RC:${globalState.system.rcList[acc[0]]}%)`)
+        return `@${acc[0]}(VP:${acc[1].percentage / 100}% - RC:${globalState.system.rcList[acc[0]]}%)`
     })
     return votingList;
 }
@@ -143,7 +118,7 @@ const setGlobalOnlineLists = (globalState) => {
 }
 
 const getVP = async (globalState) => {
-    if (globalState.system.blockCounter % 15 === 0) {
+    if (globalState.system.blockCounter % 15 == 0) {
         const result = await client.database.getDynamicGlobalProperties();
         vestPerHive = Number(result.total_vesting_fund_hive.replace(' HIVE', '')) / Number(result.total_vesting_shares.replace(' VESTS', ''))
     
@@ -158,12 +133,12 @@ const getVP = async (globalState) => {
         }
     }
 
-    if (globalState.system.blockCounter % 5 === 0) {
+    if (globalState.system.blockCounter % 5 == 0) {
         for (time in globalState.trackers) {
             if (time != 'offline') {
                 globalState.trackers[time].votingTracker = {}
                 globalState.trackers[time].onlineList = []
-            } else if (time === 'offline') {
+            } else if (time == 'offline') {
                 globalState.trackers.offline.offlineVoters = {}
             }
         }
@@ -175,61 +150,61 @@ const getVP = async (globalState) => {
         }
 
         for (value of Object.entries(tempTracker)) {
-            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP && globalState.trackers.ONE.active
+            if (value[1].percentage / 100 >= globalState.trackers.ONE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.ONE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.ONE.onlineList.includes(value[0])) {
                     globalState.trackers.ONE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP && globalState.trackers.TWO.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TWO.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TWO.onlineList.includes(value[0])) {
                     globalState.trackers.TWO.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP && globalState.trackers.THREE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.THREE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.THREE.onlineList.includes(value[0])) {
                     globalState.trackers.THREE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP && globalState.trackers.FOUR.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FOUR.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FOUR.onlineList.includes(value[0])) {
                     globalState.trackers.FOUR.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP && globalState.trackers.FIVE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FIVE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FIVE.onlineList.includes(value[0])) {
                     globalState.trackers.FIVE.onlineList.push(value[0])
                 }
-            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP && globalState.trackers.SIX.active
+            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SIX.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SIX.onlineList.includes(value[0])) {
                     globalState.trackers.SIX.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP && globalState.trackers.SEVEN.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SEVEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SEVEN.onlineList.includes(value[0])) {
                     globalState.trackers.SEVEN.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP && globalState.trackers.EIGHT.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.EIGHT.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.EIGHT.onlineList.includes(value[0])) {
                     globalState.trackers.EIGHT.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP && globalState.trackers.NINE.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.NINE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.NINE.onlineList.includes(value[0])) {
                     globalState.trackers.NINE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP && globalState.trackers.TEN.active
+            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TEN.onlineList.includes(value[0])) {
@@ -257,7 +232,7 @@ const getVP = async (globalState) => {
     return maxPower
 }
 
-const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWeight, newUserList, timeName) => {
+const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserList, timeName) => {
     if (newUserList.length > 0) {
         userToVote = newUserList[0]
 
@@ -267,61 +242,95 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
                     globalState.trackers[timeName][type].errors++
                     globalState.system.totalErrors++
                 } else {
-                    console.log(gt(`Vote success with a weight of ${(voteWeight) / 100}%!`));
+                    console.log(`Vote success with a weight of ${(voteWeight) / 100}%!`);
                 }
             });
 
-            if (voteWeight / 100 >= Number(globalState.globalVars.RFMINWEIGHT)) {
-                //Reblog:
-                if (globalState.globalVars.REBLOG == true) {
-                    const json = JSON.stringify(['reblog', {
-                        account: userToVote[0],
-                        author: author,
-                        permlink: postperm
-                    }]);
+            let updatedUserListToVote = [...newUserList];
+            updatedUserListToVote.splice(0, 1);
+            voteNow(globalState, author, postperm, link, type, voteWeight, updatedUserListToVote, timeName);
+
+        } catch (error) {
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalErrors++
+        }
+
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].votes++
+        globalState.system.totalVotes++
+    }
+}
+
+const reblogNow = (globalState, author, postperm, type, newUserList, timeName) => {
+    if (newUserList.length > 0) {
+        userToVote = newUserList[0]
+
+        try {
+            const json = JSON.stringify(['reblog', {
+                account: userToVote[0],
+                author: author,
+                permlink: postperm
+            }]);
         
-                    console.log(`Reblog author => @${author}...`)
-                      
-                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            console.log(gt(`@${userToVote[0]} reblog success!`));
-                        }
-                    });
+            console.log(`Reblog author => @${author}...`)
+                
+            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
+                if (err) {
+                    globalState.trackers[timeName][type].errors++
+                    globalState.system.totalReblogFails++;
+                } else {
+                    console.log(`@${userToVote[0]} reblog success!`);
                 }
-    
-                //Follow:
-                if (globalState.globalVars.FOLLOW == true) {
-                    const json2 = JSON.stringify(['follow', {
-                        follower: userToVote[0],
-                        following: author,
-                        what: ["blog"],
-                    }]);
-        
-                    console.log(`Follow author => @${author}...`)
-        
-                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            console.log(gt(`Follow success!`));
-                        }
-                    });
-                }
-            }
+            });
 
             let updatedUserListToVote = [...newUserList];
             updatedUserListToVote.splice(0, 1);
-            voteNow(globalState, author, postperm, link, age, blockid, type, voteWeight, updatedUserListToVote, timeName);
+            reblogNow(globalState, author, postperm, type, updatedUserListToVote, timeName);
 
         } catch (error) {
-            console.log(err)
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalReblogFails++;
         }
 
-    } else if (newUserList.length === 0 ) {
-        globalState.trackers[timeName][type].votes++
-        globalState.system.totalVotes++
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].reblogs++
+        globalState.system.totalReblogs++
+    }
+}
+
+const followNow = (globalState, author, type, newUserList, timeName) => {
+    if (newUserList.length > 0) {
+        userToVote = newUserList[0]
+
+        try {
+            const json2 = JSON.stringify(['follow', {
+                follower: userToVote[0],
+                following: author,
+                what: ["blog"],
+            }]);
+        
+            console.log(`Follow author => @${author}...`)
+        
+            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log(`Follow success!`);
+                }
+            });
+
+            let updatedUserListToVote = [...newUserList];
+            updatedUserListToVote.splice(0, 1);
+            followNow(globalState, author, type, updatedUserListToVote, timeName);
+            
+        } catch (error) {
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalFollowFails++;
+        }
+
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].follows++
+        globalState.system.totalFollows++
     }
 }
 
@@ -347,46 +356,71 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             const MinuteDiff = (((new Date().getTime() - PostCreateDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
             const postValue = Number(PostDetails.pending_payout_value.replace(' HBD', ''))
             const acceptingPayment = Number(PostDetails.max_accepted_payout.replace(' HBD', ''))
-            const totalVoters = PostDetails.active_votes.length
+            const totalVoters = Number(PostDetails.active_votes.length)
 
-            console.log(`Inspection time for ${yt('@' + author)}!`)
-            console.log(`Content-Age: ${yt(round(MinuteDiff, 2))} -- Value: ${yt(postValue)} -- voters: ${yt(totalVoters)}`)
+            console.log(`Inspection time for ${'@' + author}!`)
+            console.log(`Content-Age: ${round(MinuteDiff, 2)} -- Value: ${postValue} -- voters: ${totalVoters}`)
 
             let votesignal = true
             PostDetails.active_votes.forEach(voter => {
-                if (userNamesList.includes(voter.voter) || voter === author){
+                if (userNamesList.includes(voter.voter) || voter == author){
                     votesignal = false
                 }
             })
 
-            if (totalVoters <= globalState.globalVars.MAXVOTERS && (postValue / avgValue) <= 0.025 && votesignal === true && acceptingPayment > 0) {
-                let newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
-                if (newVoteWeight > 10000) {
-                    newVoteWeight = 10000;
+            if (totalVoters <= globalState.globalVars.MAXVOTERS && (postValue / avgValue) <= 0.025 && votesignal == true && acceptingPayment > 0) {
+                let newVoteWeight = globalState.trackers[timeName].baseWeight;
+                if (globalState.globalVars.VWSCALE == true) {
+                    newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
+                    if (newVoteWeight > 10000) {
+                        newVoteWeight = 10000;
+                    }
                 }
 
                 if (globalState.trackers.onlineVotersList[timeName].length > 0) {
                     const linkList = link.split('/')
                     const postPerm = linkList[linkList.length -1]
-                    console.log(gt(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} accounts...`))
+                    console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} accounts...`)
                     console.log(`---------------------`)
+                    //Vote:
                     try {
-                        voteNow(globalState, author, postPerm, link, MinuteDiff, blockId, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
+                        voteNow(globalState, author, postPerm, link, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
                     } catch (error) {
-                        console.log(err);
+                        globalState.system.totalErrors++;
                     }
+
+                    //Reblog:
+                    if (globalState.globalVars.REBLOG == true) {
+                        try {
+                            reblogNow(globalState, author, postPerm, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
+                        } catch (error) {
+                            globalState.system.totalReblogFails++;
+                        }
+                    }
+
+                    //Follow:
+                    if (globalState.globalVars.FOLLOW == true) {
+                        try {
+                            followNow(globalState, author, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
+                        } catch (error) {
+                            globalState.system.totalFollowFails++;
+                        }
+                    }
+
                 } else {
-                    console.log(rt('No accounts available to vote!'))
+                    console.log('No accounts available to vote @ this timeframe')
+                    console.log(`---------------------`)
                 }
-            } else if (votesignal === false) {
-                console.log(rt(`Already voted here! / Author has voted here!`))
+            } else if (votesignal == false) {
+                console.log(`Already voted here! / Author has voted here!`)
+                console.log(`---------------------`)
             } else {
-                console.log(rt(`Not profitable to vote! =(`))
+                console.log(`Not profitable to vote! =(`)
                 console.log(`---------------------`)
             }
         }, time)
     })
-    console.log(`Scheduled inspection for ${yt(round(time / 1000, 2) + ' secs')} from now...`)
+    console.log(`Scheduled inspection for ${round(time / 1000, 2) + ' secs'} from now...`)
     console.log(`---------------------`)
 }
 
@@ -416,7 +450,7 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
         const createDate = Date.parse(new Date(authorPost.created).toISOString())
         const timeDiff = (((new Date().getTime() - createDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
 
-        if (authorPost.author === author && timeDiff <= 10080) {
+        if (authorPost.author == author && timeDiff <= 10080) {
             postCount += 1
             totalPostValue += postValue
             valueData.push(postValue)
@@ -424,7 +458,7 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
     })
 
     let avgValue = totalPostValue / postCount
-    if (isNaN(avgValue) || avgValue == null || avgValue === undefined) {
+    if (isNaN(avgValue) || avgValue == null || avgValue == undefined) {
         avgValue = 0.000
     }
 
@@ -434,40 +468,35 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
     let scheduleTime = ''
     let timeName = ''
 
-    if (type === 'posts') {
-        for (timeFrame of globalState.system.timeFrames) {
-            if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS 
-                && avgValue >= globalState.trackers[timeFrame].posts.minAvg && percentile >= globalState.globalVars.PROFITMIN
-                && currentVoters <= globalState.globalVars.MAXVOTERS) {
-                    scheduleTime = globalState.trackers[timeFrame].scheduleTime
-                    timeName = timeFrame
-                    timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
+    for (timeFrame of globalState.system.timeFrames) {
+        if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
+            && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
+            && percentile > 0) {
+                scheduleTime = globalState.trackers[timeFrame].scheduleTime
+                timeName = timeFrame
+                timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
 
-                    return {
-                        signal : true,
-                        author : author,
-                        avg : avgValue,
-                        link : link,
-                        parentPerm : parentPermLink,
-                        age : minuteDiff,
-                        perm : permlink,
-                        timeFrame : timeFrame,
-                        scheduleTime : scheduleTime,
-                        timeName : timeName,
-                        profitChance : percentile
-                    }
+                return {
+                    signal : true,
+                    author : author,
+                    avg : avgValue,
+                    link : link,
+                    parentPerm : parentPermLink,
+                    age : minuteDiff,
+                    perm : permlink,
+                    timeFrame : timeFrame,
+                    scheduleTime : scheduleTime,
+                    timeName : timeName,
+                    profitChance : percentile
                 }
-        }
-        return {signal : false}
+            }
     }
+    return {signal : false}
 }
 //----------------------------------------------------
 
 
 module.exports = {
-    yt : yt,
-    gt : gt,
-    rt : rt,
     round : round,
     displayVotingPower : displayVotingPower,
     logTrackers : logTrackers,
