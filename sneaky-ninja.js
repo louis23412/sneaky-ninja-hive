@@ -70,11 +70,11 @@ const streamNow = () => {
         const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
         const blockCatchRatio = `${actions.round((globalState.system.blockCounter / (actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%'}`
     
-        console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Block Catch Ratio: ${blockCatchRatio}`)
-        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
+        console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
+        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks || Voteweight mode: ${vwModeStatus}`)
         console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
-        console.log(`* Total Votes: ${globalState.system.totalVotes} || Total Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
-        console.log(`* Stream errors: ${globalState.system.streamErr} || Voteweight mode: ${vwModeStatus}`)
+        console.log(`* Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+        console.log(`* Reblogs: ${globalState.system.totalReblogs} || Reblog Fails: ${globalState.system.totalReblogFails} || Follows: ${globalState.system.totalFollows} || Follow Fails: ${globalState.system.totalFollowFails}`)
         console.log()
     
         actions.logTrackers(globalState)

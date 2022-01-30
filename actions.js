@@ -232,7 +232,7 @@ const getVP = async (globalState) => {
     return maxPower
 }
 
-const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWeight, newUserList, timeName) => {
+const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserList, timeName) => {
     if (newUserList.length > 0) {
         userToVote = newUserList[0]
 
@@ -246,57 +246,91 @@ const voteNow = (globalState, author, postperm, link, age, blockid, type, voteWe
                 }
             });
 
-            if (voteWeight / 100 >= Number(globalState.globalVars.RFMINWEIGHT)) {
-                //Reblog:
-                if (globalState.globalVars.REBLOG == true) {
-                    const json = JSON.stringify(['reblog', {
-                        account: userToVote[0],
-                        author: author,
-                        permlink: postperm
-                    }]);
+            let updatedUserListToVote = [...newUserList];
+            updatedUserListToVote.splice(0, 1);
+            voteNow(globalState, author, postperm, link, type, voteWeight, updatedUserListToVote, timeName);
+
+        } catch (error) {
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalErrors++
+        }
+
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].votes++
+        globalState.system.totalVotes++
+    }
+}
+
+const reblogNow = (globalState, author, postperm, type, newUserList, timeName) => {
+    if (newUserList.length > 0) {
+        userToVote = newUserList[0]
+
+        try {
+            const json = JSON.stringify(['reblog', {
+                account: userToVote[0],
+                author: author,
+                permlink: postperm
+            }]);
         
-                    console.log(`Reblog author => @${author}...`)
-                      
-                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            console.log(`@${userToVote[0]} reblog success!`);
-                        }
-                    });
+            console.log(`Reblog author => @${author}...`)
+                
+            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
+                if (err) {
+                    globalState.trackers[timeName][type].errors++
+                    globalState.system.totalReblogFails++;
+                } else {
+                    console.log(`@${userToVote[0]} reblog success!`);
                 }
-    
-                //Follow:
-                if (globalState.globalVars.FOLLOW == true) {
-                    const json2 = JSON.stringify(['follow', {
-                        follower: userToVote[0],
-                        following: author,
-                        what: ["blog"],
-                    }]);
-        
-                    console.log(`Follow author => @${author}...`)
-        
-                    hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            console.log(`Follow success!`);
-                        }
-                    });
-                }
-            }
+            });
 
             let updatedUserListToVote = [...newUserList];
             updatedUserListToVote.splice(0, 1);
-            voteNow(globalState, author, postperm, link, age, blockid, type, voteWeight, updatedUserListToVote, timeName);
+            reblogNow(globalState, author, postperm, type, updatedUserListToVote, timeName);
 
         } catch (error) {
-            console.log(err)
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalReblogFails++;
         }
 
-    } else if (newUserList.length == 0 ) {
-        globalState.trackers[timeName][type].votes++
-        globalState.system.totalVotes++
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].reblogs++
+        globalState.system.totalReblogs++
+    }
+}
+
+const followNow = (globalState, author, type, newUserList, timeName) => {
+    if (newUserList.length > 0) {
+        userToVote = newUserList[0]
+
+        try {
+            const json2 = JSON.stringify(['follow', {
+                follower: userToVote[0],
+                following: author,
+                what: ["blog"],
+            }]);
+        
+            console.log(`Follow author => @${author}...`)
+        
+            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log(`Follow success!`);
+                }
+            });
+
+            let updatedUserListToVote = [...newUserList];
+            updatedUserListToVote.splice(0, 1);
+            followNow(globalState, author, type, updatedUserListToVote, timeName);
+            
+        } catch (error) {
+            globalState.trackers[timeName][type].errors++
+            globalState.system.totalFollowFails++;
+        }
+
+    } else if (newUserList.length == 0) {
+        globalState.trackers[timeName][type].follows++
+        globalState.system.totalFollows++
     }
 }
 
@@ -348,16 +382,38 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
                     const postPerm = linkList[linkList.length -1]
                     console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} accounts...`)
                     console.log(`---------------------`)
+                    //Vote:
                     try {
-                        voteNow(globalState, author, postPerm, link, MinuteDiff, blockId, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
+                        voteNow(globalState, author, postPerm, link, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
                     } catch (error) {
-                        console.log(err);
+                        globalState.system.totalErrors++;
                     }
+
+                    //Reblog:
+                    if (globalState.globalVars.REBLOG == true) {
+                        try {
+                            reblogNow(globalState, author, postPerm, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
+                        } catch (error) {
+                            globalState.system.totalReblogFails++;
+                        }
+                    }
+
+                    //Follow:
+                    if (globalState.globalVars.FOLLOW == true) {
+                        try {
+                            followNow(globalState, author, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
+                        } catch (error) {
+                            globalState.system.totalFollowFails++;
+                        }
+                    }
+
                 } else {
-                    console.log('No accounts available to vote!')
+                    console.log('No accounts available to vote @ this timeframe')
+                    console.log(`---------------------`)
                 }
             } else if (votesignal == false) {
                 console.log(`Already voted here! / Author has voted here!`)
+                console.log(`---------------------`)
             } else {
                 console.log(`Not profitable to vote! =(`)
                 console.log(`---------------------`)
