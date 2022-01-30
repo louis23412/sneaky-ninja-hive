@@ -6,7 +6,7 @@
 `npm install`
 
 2. ### Configuring variables & running the bot:
-* Open __globalProps.json__ & add your account(s) + key(s) <br>
+* Open __settings.json__ & add your account(s) + key(s) <br>
    ##### Single account: <br>
    ```
    "USERLIST" : [
@@ -22,32 +22,39 @@
        ["usernameHere", "privatePostingKeyHere"]
    ]
    ```
+   For [security reasons](https://hive.blog/faq.html#Why_should_I_be_careful_with_my_master_password), only use your posting key(s)!
    
 * Change the variables as needed:
    ```
     "GLOBALVARS" : {
         "REBLOG" : false,
         "FOLLOW" : false,
-        "RFMINWEIGHT" : 33,
-        "MINRC" : 80,
+        "RFMINWEIGHT" : 100,
+
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "PROFITMIN" : 10,
-        "MAXVOTERS" : 5
+        "MINAVGPOST" : 3,
+        "MAXVOTERS" : 5,
+        "MINSCHEDULETIME" : 4.88,
+
+        "MINRC" : 80,
+        "VPRANGESTART" : 92,
+        "VPRANGESTOP" : 97,
+        "BASEWEIGHT" : 15,
+        "VWSCALE" : true
     }
    ```
 
-* Set properties for each tracker. Example:
+* The bot should work just fine with the default rpc list provided, but if it seems a bit slow or fails, you can view the status of all active nodes [here](https://beacon.peakd.com/).
+
    ```
-   "ONE" : {
-      "MINVP" : 97,
-      "SCHEDULETIME" : 3.98,
-      "BASEWEIGHT" : 1500, //Divide by 100 to get base voteweight. 1500 = 15%.
-      "MINAVGPOST" : 3,
-      "ACTIVE" : true
-   }
+    "RPCLIST" : [
+      "https://anyx.io",
+      "https://rpc.ausbit.dev",
+      "https://api.hive.blog",
+      "https://api.openhive.network"
+    ]
    ```
-   Each tracking category should be higher in MinVp than the next! So tracker ONE minVP should be > than tracker TWO minVP. (The globalProps file provided comes with my current setup running as example.)
    
 * Save the config file, then run the bot <br>
    `npm start`

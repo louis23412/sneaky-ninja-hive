@@ -4,8 +4,8 @@
     ],
 
     "GLOBALVARS" : {
-        "REBLOG" : true,
-        "FOLLOW" : true,
+        "REBLOG" : false,
+        "FOLLOW" : false,
         "RFMINWEIGHT" : 100,
 
         "MINREP" : 35,
