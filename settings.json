@@ -15,9 +15,9 @@
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 92,
-        "VPRANGESTOP" : 97,
-        "BASEWEIGHT" : 15,
+        "VPRANGESTART" : 90,
+        "VPRANGESTOP" : 99.33,
+        "BASEWEIGHT" : 1,
         "VWSCALE" : true
     },
 

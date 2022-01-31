@@ -53,8 +53,42 @@ module.exports = globalState = {
         },
 
         'TWO' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 50,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 1),
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 1),
+            onlineList : [],
+            votingTracker : {},
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 5,
+            posts : {
+                minAvg : GLOBALVARS.MINAVGPOST,
+                errors: 0,
+                votes: 0,
+                reblogs : 0,
+                follows : 0,
+                inspections: 0,
+                pendingInspections: []
+            }
+        },
+
+        'THREE' : {
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 2),
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 2),
+            onlineList : [],
+            votingTracker : {},
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 10,
+            posts : {
+                minAvg : GLOBALVARS.MINAVGPOST,
+                errors: 0,
+                votes: 0,
+                reblogs : 0,
+                follows : 0,
+                inspections: 0,
+                pendingInspections: []
+            }
+        },
+
+        'FOUR' : {
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 3),
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 3),
             onlineList : [],
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 15,
@@ -69,9 +103,43 @@ module.exports = globalState = {
             }
         },
 
-        'THREE' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 100,
-            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 2),
+        'FIVE' : {
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 4),
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 4),
+            onlineList : [],
+            votingTracker : {},
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 20,
+            posts : {
+                minAvg : GLOBALVARS.MINAVGPOST,
+                errors: 0,
+                votes: 0,
+                reblogs : 0,
+                follows : 0,
+                inspections: 0,
+                pendingInspections: []
+            }
+        },
+
+        'SIX' : {
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 5),
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 5),
+            onlineList : [],
+            votingTracker : {},
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 25,
+            posts : {
+                minAvg : GLOBALVARS.MINAVGPOST,
+                errors: 0,
+                votes: 0,
+                reblogs : 0,
+                follows : 0,
+                inspections: 0,
+                pendingInspections: []
+            }
+        },
+
+        'SEVEN' : {
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 6),
+            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 6),
             onlineList : [],
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 30,
@@ -86,80 +154,12 @@ module.exports = globalState = {
             }
         },
 
-        'FOUR' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 150,
-            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 3),
-            onlineList : [],
-            votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 45,
-            posts : {
-                minAvg : GLOBALVARS.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                reblogs : 0,
-                follows : 0,
-                inspections: 0,
-                pendingInspections: []
-            }
-        },
-
-        'FIVE' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 200,
-            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 4),
-            onlineList : [],
-            votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 60,
-            posts : {
-                minAvg : GLOBALVARS.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                reblogs : 0,
-                follows : 0,
-                inspections: 0,
-                pendingInspections: []
-            }
-        },
-
-        'SIX' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 250,
-            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 5),
-            onlineList : [],
-            votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 75,
-            posts : {
-                minAvg : GLOBALVARS.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                reblogs : 0,
-                follows : 0,
-                inspections: 0,
-                pendingInspections: []
-            }
-        },
-
-        'SEVEN' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 300,
-            minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 6),
-            onlineList : [],
-            votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 90,
-            posts : {
-                minAvg : GLOBALVARS.MINAVGPOST,
-                errors: 0,
-                votes: 0,
-                reblogs : 0,
-                follows : 0,
-                inspections: 0,
-                pendingInspections: []
-            }
-        },
-
         'EIGHT' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 350,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 7),
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 7),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 105,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 35,
             posts : {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
@@ -172,11 +172,11 @@ module.exports = globalState = {
         },
 
         'NINE' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 400,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 8),
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 8),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 120,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 40,
             posts : {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
@@ -189,11 +189,11 @@ module.exports = globalState = {
         },
 
         'TEN' : {
-            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - 450,
+            baseWeight : (GLOBALVARS.BASEWEIGHT * 100) - (((GLOBALVARS.BASEWEIGHT * 100) / 10) * 9),
             minVP : GLOBALVARS.VPRANGESTART,
             onlineList : [],
             votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 135,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 45,
             posts : {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
