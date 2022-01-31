@@ -471,7 +471,7 @@ const ScheduleFlag = async (globalState, operationDetails, type) => {
     for (timeFrame of globalState.system.timeFrames) {
         if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
             && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
-            && percentile > 0) {
+            && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0) {
                 scheduleTime = globalState.trackers[timeFrame].scheduleTime
                 timeName = timeFrame
                 timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
