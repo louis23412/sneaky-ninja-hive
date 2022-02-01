@@ -7,8 +7,13 @@ let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
+//Check base weight before starting script:
+if (globalState.globalVars.BASEWEIGHT < 1) {
+    console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+    process.exit();
+}
+
 //Update config for hivejs with new rpc list:
-//----------------------------------------------------
 altEnds = []
 RPCLIST.forEach(rpc => {
     if (!(rpc == RPCLIST[0])) {

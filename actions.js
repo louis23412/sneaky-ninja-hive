@@ -363,13 +363,17 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             console.log(`Content-Age: ${round(MinuteDiff, 2)} -- Value: ${postValue} -- voters: ${totalVoters}`)
 
             let votesignal = true
-            PostDetails.active_votes.forEach(voter => {
-                if (userNamesList.includes(voter.voter) || voter == author){
+            let voteTicker = 0;
+            for (voter of PostDetails.active_voters) {
+                voteTicker++;
+                if (userNamesList.includes(voter.voter) || voter == author || voteTicker > Number(globalState.globalVars.MAXVOTERS)){
                     votesignal = false
+                    break;
                 }
-            })
+            }
 
-            if (totalVoters <= globalState.globalVars.MAXVOTERS && (postValue / avgValue) <= 0.025 && votesignal == true && acceptingPayment > 0) {
+            if (postValue / avgValue <= 0.025 && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
+            && postValue < globalState.trackers[timeName].posts.minAvg) {
                 let newVoteWeight = globalState.trackers[timeName].baseWeight;
                 if (globalState.globalVars.VWSCALE == true) {
                     newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
@@ -413,7 +417,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
                     console.log(`---------------------`)
                 }
             } else if (votesignal == false) {
-                console.log(`Already voted here! / Author has voted here!`)
+                console.log(`Already voted here! / Author has voted here! / Too many voters!`)
                 console.log(`---------------------`)
             } else {
                 console.log(`Not profitable to vote! =(`)
