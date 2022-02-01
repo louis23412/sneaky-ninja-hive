@@ -364,7 +364,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
 
             let votesignal = true
             let voteTicker = 0;
-            for (voter of PostDetails.active_voters) {
+            for (voter of PostDetails.active_votes) {
                 voteTicker++;
                 if (userNamesList.includes(voter.voter) || voter == author || voteTicker > Number(globalState.globalVars.MAXVOTERS)){
                     votesignal = false
