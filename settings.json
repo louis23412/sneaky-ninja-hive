@@ -4,19 +4,22 @@
     ],
 
     "GLOBALVARS" : {
+        "PROGRESSLOG" : true,
+        "LOGRATE" : 5,
+
         "REBLOG" : false,
         "FOLLOW" : false,
         "RFMINWEIGHT" : 100,
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "MINAVGPOST" : 3,
-        "MAXVOTERS" : 5,
+        "MINAVGPOST" : 1,
+        "MAXVOTERS" : 3,
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
         "VPRANGESTART" : 90,
-        "VPRANGESTOP" : 99.33,
+        "VPRANGESTOP" : 99,
         "BASEWEIGHT" : 1,
         "VWSCALE" : true
     },

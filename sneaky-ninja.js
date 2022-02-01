@@ -7,8 +7,13 @@ let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
+//Check base weight before starting script:
+if (globalState.globalVars.BASEWEIGHT < 1) {
+    console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+    process.exit();
+}
+
 //Update config for hivejs with new rpc list:
-//----------------------------------------------------
 altEnds = []
 RPCLIST.forEach(rpc => {
     if (!(rpc == RPCLIST[0])) {
@@ -70,17 +75,16 @@ const streamNow = () => {
         const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
         const blockCatchRatio = `${actions.round((globalState.system.blockCounter / (actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%'}`
     
-        console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
-        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks || Voteweight mode: ${vwModeStatus}`)
-        console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
-        console.log(`* Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
-        console.log(`* Reblogs: ${globalState.system.totalReblogs} || Reblog Fails: ${globalState.system.totalReblogFails} || Follows: ${globalState.system.totalFollows} || Follow Fails: ${globalState.system.totalFollowFails}`)
-        console.log()
-    
-        actions.logTrackers(globalState)
-        console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${actions.displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
-    
-        console.log(`${'----------------------------------------------------------------------'}`)
+        if (globalState.globalVars.PROGRESSLOG == true & (globalState.system.blockCounter % globalState.globalVars.LOGRATE == 0 || globalState.system.blockCounter == 1)) {
+            console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
+            console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks || Voteweight mode: ${vwModeStatus}`)
+            console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
+            console.log(`* Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+            console.log(`* Reblogs: ${globalState.system.totalReblogs} || Reblog Fails: ${globalState.system.totalReblogFails} || Follows: ${globalState.system.totalFollows} || Follow Fails: ${globalState.system.totalFollowFails}`)
+            console.log()
+            actions.logTrackers(globalState)
+            console.log(`${'----------------------------------------------------------------------'}`)
+        }
     
         data.forEach(async trans => {
             const operations = trans.operations
@@ -99,7 +103,7 @@ const streamNow = () => {
                         console.log(`Content-link: ${answer.link}`)
         
                         let scheduleTime = (answer.scheduleTime * 60) * 1000 - ((answer.age * 60) * 1000)
-                        actions.setSchedule(globalState, scheduleTime, 'posts', answer.author, answer.parentPerm, answer.perm, answer.avg, answer.link, blockId, answer.timeFrame, answer.timeName);
+                        actions.setSchedule(globalState, scheduleTime, 'posts', answer.author, answer.parentPerm, answer.perm, answer.avg, answer.link, answer.timeFrame, answer.timeName);
                     }
                 } catch (err) {
                     console.log(`Post ScheduleFlag Error! -- ${err}`)
