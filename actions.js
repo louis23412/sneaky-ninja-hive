@@ -60,6 +60,7 @@ const logTrackers = (globalState) => {
         }
     }
     console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): ${active_voters}`)
+    console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
 }
 
 const setGlobalOnlineLists = (globalState) => {
@@ -334,7 +335,7 @@ const followNow = (globalState, author, type, newUserList, timeName) => {
     }
 }
 
-const setSchedule = (globalState, time, contentType, author, parentPerm, permLink, avgValue, link, blockId, trackingList, timeName) => {
+const setSchedule = (globalState, time, contentType, author, parentPerm, permLink, avgValue, link, trackingList, timeName) => {
     new Promise((resolve, reject) => {
         setTimeout( async () => {
             const index = trackingList.indexOf(author)
@@ -424,7 +425,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
     console.log(`---------------------`)
 }
 
-const ScheduleFlag = async (globalState, operationDetails, type) => {
+const ScheduleFlag = async (globalState, operationDetails) => {
     const author = operationDetails.author
     const parentPermLink = operationDetails.parent_permlink
     const permlink = operationDetails.permlink

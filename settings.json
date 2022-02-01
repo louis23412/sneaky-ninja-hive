@@ -4,6 +4,9 @@
     ],
 
     "GLOBALVARS" : {
+        "PROGRESSLOG" : true,
+        "LOGRATE" : 5,
+
         "REBLOG" : false,
         "FOLLOW" : false,
         "RFMINWEIGHT" : 100,
