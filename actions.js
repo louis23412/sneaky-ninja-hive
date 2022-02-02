@@ -263,79 +263,6 @@ const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserL
     }
 }
 
-const reblogNow = (globalState, author, postperm, type, newUserList, timeName) => {
-    if (newUserList.length > 0) {
-        userToVote = newUserList[0]
-
-        try {
-            const json = JSON.stringify(['reblog', {
-                account: userToVote[0],
-                author: author,
-                permlink: postperm
-            }]);
-        
-            console.log(`Reblog author => @${author}...`)
-                
-            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
-                if (err) {
-                    globalState.trackers[timeName][type].errors++
-                    globalState.system.totalReblogFails++;
-                } else {
-                    console.log(`@${userToVote[0]} reblog success!`);
-                }
-            });
-
-            let updatedUserListToVote = [...newUserList];
-            updatedUserListToVote.splice(0, 1);
-            reblogNow(globalState, author, postperm, type, updatedUserListToVote, timeName);
-
-        } catch (error) {
-            globalState.trackers[timeName][type].errors++
-            globalState.system.totalReblogFails++;
-        }
-
-    } else if (newUserList.length == 0) {
-        globalState.trackers[timeName][type].reblogs++
-        globalState.system.totalReblogs++
-    }
-}
-
-const followNow = (globalState, author, type, newUserList, timeName) => {
-    if (newUserList.length > 0) {
-        userToVote = newUserList[0]
-
-        try {
-            const json2 = JSON.stringify(['follow', {
-                follower: userToVote[0],
-                following: author,
-                what: ["blog"],
-            }]);
-        
-            console.log(`Follow author => @${author}...`)
-        
-            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    console.log(`Follow success!`);
-                }
-            });
-
-            let updatedUserListToVote = [...newUserList];
-            updatedUserListToVote.splice(0, 1);
-            followNow(globalState, author, type, updatedUserListToVote, timeName);
-            
-        } catch (error) {
-            globalState.trackers[timeName][type].errors++
-            globalState.system.totalFollowFails++;
-        }
-
-    } else if (newUserList.length == 0) {
-        globalState.trackers[timeName][type].follows++
-        globalState.system.totalFollows++
-    }
-}
-
 const setSchedule = (globalState, time, contentType, author, avgValue, link, trackingList, timeName, pureL) => {
     new Promise((resolve, reject) => {
         setTimeout( async () => {
@@ -396,24 +323,6 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
                         voteNow(globalState, author, postPerm, link, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
                     } catch (error) {
                         globalState.system.totalErrors++;
-                    }
-
-                    //Reblog:
-                    if (globalState.globalVars.REBLOG == true) {
-                        try {
-                            reblogNow(globalState, author, postPerm, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
-                        } catch (error) {
-                            globalState.system.totalReblogFails++;
-                        }
-                    }
-
-                    //Follow:
-                    if (globalState.globalVars.FOLLOW == true) {
-                        try {
-                            followNow(globalState, author, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
-                        } catch (error) {
-                            globalState.system.totalFollowFails++;
-                        }
                     }
 
                 } else {

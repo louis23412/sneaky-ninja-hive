@@ -16,10 +16,6 @@ module.exports = globalState = {
         fails : 0,
         operationInspections : 0,
         totalVotes : 0,
-        totalReblogs : 0,
-        totalReblogFails : 0,
-        totalFollows : 0,
-        totalFollowFails : 0,
         totalErrors : 0,
         totalInspections : 0,
         rcList : {},
@@ -45,8 +41,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -62,8 +56,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -79,8 +71,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -96,8 +86,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -113,8 +101,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -130,8 +116,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -147,8 +131,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -164,8 +146,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -181,8 +161,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }
@@ -198,8 +176,6 @@ module.exports = globalState = {
                 minAvg : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
-                reblogs : 0,
-                follows : 0,
                 inspections: 0,
                 pendingInspections: []
             }

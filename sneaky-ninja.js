@@ -7,27 +7,6 @@ let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
 
-//Check base weight before starting script:
-if (globalState.globalVars.BASEWEIGHT < 1) {
-    console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
-    process.exit();
-}
-
-//Update config for hivejs with new rpc list:
-altEnds = []
-RPCLIST.forEach(rpc => {
-    if (!(rpc == RPCLIST[0])) {
-        altEnds.push(rpc);
-    }
-});
-
-hive.config.uri = RPCLIST[0];
-hive.config.url = RPCLIST[0];
-hive.config.alternative_api_endpoints = altEnds;
-hive.config.failover_threshold = 0;
-hive.config.transport = 'http';
-//----------------------------------------------------
-
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 
 const streamNow = () => {
@@ -84,7 +63,6 @@ const streamNow = () => {
             console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks || Voteweight mode: ${vwModeStatus}`)
             console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
             console.log(`* Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
-            console.log(`* Reblogs: ${globalState.system.totalReblogs} || Reblog Fails: ${globalState.system.totalReblogFails} || Follows: ${globalState.system.totalFollows} || Follow Fails: ${globalState.system.totalFollowFails}`)
             console.log()
             actions.logTrackers(globalState)
             console.log(`${'----------------------------------------------------------------------'}`)
@@ -117,5 +95,31 @@ const streamNow = () => {
     }))
 }
 
-console.log('Starting up block stream...')
-streamNow();
+const main = async () => {
+    //Update config for hivejs with new rpc list:
+    altEnds = []
+    RPCLIST.forEach(rpc => {
+        if (!(rpc == RPCLIST[0])) {
+            altEnds.push(rpc);
+        }
+    });
+
+    hive.config.uri = RPCLIST[0];
+    hive.config.url = RPCLIST[0];
+    hive.config.alternative_api_endpoints = altEnds;
+    hive.config.failover_threshold = 0;
+    hive.config.transport = 'http';
+    //----------------------------------------------------
+
+    //Check base weight before starting script:
+    if (globalState.globalVars.BASEWEIGHT < 1) {
+        console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+        process.exit();
+    }
+
+    //----------------------------------------------------
+    //Start:
+    console.log('Starting up block stream...')
+    streamNow();
+}
+main();

@@ -7,10 +7,6 @@
         "PROGRESSLOG" : true,
         "LOGRATE" : 1,
 
-        "REBLOG" : false,
-        "FOLLOW" : false,
-        "RFMINWEIGHT" : 100,
-
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
         "MINAVGPOST" : 1,
@@ -18,11 +14,20 @@
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 90,
+        "VPRANGESTART" : 95,
         "VPRANGESTOP" : 99,
-        "BASEWEIGHT" : 10,
+        "BASEWEIGHT" : 1,
         "VWSCALE" : true
     },
+
+    "SKIPTAGS" : [
+        "cross-post",
+        "nsfw"
+    ],
+
+    "SKIPVOTERS" : [
+        "spaminator"
+    ],
 
     "RPCLIST" : [
         "https://anyx.io",
