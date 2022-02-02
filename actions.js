@@ -2,7 +2,7 @@ const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 
-const { USERLIST, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
+const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
@@ -47,6 +47,10 @@ const displayVotingPower = (trackerObject, globalState) => {
         return `@${acc[0]}(VP:${acc[1].percentage / 100}% - RC:${globalState.system.rcList[acc[0]]}%)`
     })
     return votingList;
+}
+
+const commonItems = (arr1, arr2) => {
+    return arr1.some(item => arr2.includes(item))
 }
 //----------------------------------------------------
 
@@ -295,15 +299,19 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
             let voteTicker = 0;
             for (voter of PostDetails.active_votes) {
                 voteTicker++;
-                if (userNamesList.includes(voter.voter) || voter == author || voteTicker > Number(globalState.globalVars.MAXVOTERS)){
+                if (userNamesList.includes(voter.voter) || voter == author 
+                    || voteTicker > Number(globalState.globalVars.MAXVOTERS || globalState)
+                    || SKIPVOTERS.includes(voter.voter)){
                     votesignal = false
                     break;
                 }
             }
 
-            if (postValue / avgValue <= 0.025 && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
-            && postValue < globalState.trackers[timeName].posts.minAvg
-            && PostDetails.parent_author == '' && PostDetails.title != '') {
+            if (postValue / avgValue <= globalState.globalVars.MAXVALUETHRESHOLD / 100
+                && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
+                && postValue < globalState.trackers[timeName].posts.minAvg
+                && PostDetails.parent_author == '' && PostDetails.title != ''
+                && !commonItems(JSON.parse(PostDetails.json_metadata).tags, SKIPTAGS)) {
 
                 let newVoteWeight = globalState.trackers[timeName].baseWeight;
                 if (globalState.globalVars.VWSCALE == true) {
@@ -326,14 +334,14 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
                     }
 
                 } else {
-                    console.log('No accounts available to vote @ this timeframe')
+                    console.log('No accounts available to vote @ this timeframe!')
                     console.log(`---------------------`)
                 }
             } else if (votesignal == false) {
-                console.log(`Already voted here! / Author has voted here! / Too many voters!`)
+                console.log(`Conditions not met!`)
                 console.log(`---------------------`)
             } else {
-                console.log(`Not profitable to vote! =(`)
+                console.log(`Not worth the vote!`)
                 console.log(`---------------------`)
             }
         }, time)
@@ -353,16 +361,16 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     const postCreateDate = Date.parse(new Date(postDetails.created).toISOString())
     const currentVoters = postDetails.active_votes.length
     const minuteDiff = (((new Date().getTime() - postCreateDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
-    const authorState = await client.database.getState(`/@${author}`)
-    const authorDetails = Object.values(authorState.accounts)[0]
-    const authorRep = hive.formatter.reputation(authorDetails.reputation)
-    let authorContent = Object.values(authorState.content)
+
+    const authorContent = await client.hivemind.call('get_account_posts', {sort: 'posts', account: author, limit: 100})
+    const authorRep = authorContent[0].author_reputation;
 
     globalState.system.operationInspections++
 
     let postCount = 0
     let totalPostValue = 0
     let valueData = [];
+    let allVoters = [];
 
     authorContent.forEach(authorPost => {
         const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
@@ -373,6 +381,10 @@ const ScheduleFlag = async (globalState, operationDetails) => {
             postCount += 1
             totalPostValue += postValue
             valueData.push(postValue)
+        }
+
+        for (oldVoter of authorPost.active_votes) {
+            allVoters.push(oldVoter.voter);
         }
     })
 
@@ -392,7 +404,8 @@ const ScheduleFlag = async (globalState, operationDetails) => {
             && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
             && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0
             && postDetails.parent_author == '' && postDetails.title != ''
-            && !(JSON.parse(postDetails.json_metadata).tags.includes('cross-post'))) {
+            && !commonItems(JSON.parse(postDetails.json_metadata).tags, SKIPTAGS)
+            && !commonItems(allVoters, SKIPVOTERS)) {
                 scheduleTime = globalState.trackers[timeFrame].scheduleTime
                 timeName = timeFrame
                 timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
@@ -421,6 +434,7 @@ const ScheduleFlag = async (globalState, operationDetails) => {
 module.exports = {
     round : round,
     displayVotingPower : displayVotingPower,
+    commonItems : commonItems,
     logTrackers : logTrackers,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,

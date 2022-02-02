@@ -5,7 +5,7 @@ const es = require('event-stream');
 const actions = require('./actions');
 let globalState = require('./globalState');
 
-const { USERLIST, RPCLIST } = JSON.parse(fs.readFileSync('./settings.json'));
+const { USERLIST, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 
@@ -73,7 +73,8 @@ const streamNow = () => {
             const typeOf = operations[0][0]
             const operationDetails = operations[0][1]
     
-            if (typeOf == 'comment' && operationDetails.author.length > 0 && operationDetails.parent_author == '' && operationDetails.title != '') {
+            if (typeOf == 'comment' && operationDetails.author.length > 0 
+                && operationDetails.parent_author == '' && operationDetails.title != '') {
                 try {
                     const answer = await actions.ScheduleFlag(globalState, operationDetails)
                     if (answer.signal == true && !globalState.system.pendingAuthorList.includes(answer.author)) {

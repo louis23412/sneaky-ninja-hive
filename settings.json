@@ -12,6 +12,7 @@
         "MINAVGPOST" : 1,
         "DOWNSCALEMINAVG" : true,
         "MAXVOTERS" : 3,
+        "MAXVALUETHRESHOLD" : 2.5, 
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
