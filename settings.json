@@ -10,6 +10,7 @@
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
         "MINAVGPOST" : 1,
+        "DOWNSCALEMINAVG" : true,
         "MAXVOTERS" : 3,
         "MINSCHEDULETIME" : 4.88,
 
