@@ -38,6 +38,7 @@ const streamNow = () => {
     const stream = client.blockchain.getBlockStream('Latest')
     .on('error', () => {
         console.log('Stream error!!!')
+        console.log(`---------------------`)
         globalState.system.streamErr++
         streamNow();
     })
@@ -49,6 +50,7 @@ const streamNow = () => {
             globalState.system.votingPower = await actions.getVP(globalState);
         } catch (err) {
             console.log(`GetVP error! -- ${err}`)
+            console.log(`---------------------`)
         }
         actions.setGlobalOnlineLists(globalState);
     
@@ -70,6 +72,8 @@ const streamNow = () => {
     
         if (globalState.system.blockCounter == 1) {
             globalState.system.startHP = globalState.system.votingHivePower
+            console.log('Stream started!')
+            console.log(`---------------------`)
         }
     
         const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
@@ -91,22 +95,22 @@ const streamNow = () => {
             const typeOf = operations[0][0]
             const operationDetails = operations[0][1]
     
-            if (typeOf == 'comment' && operationDetails.parent_author == '') {
+            if (typeOf == 'comment' && operationDetails.author.length > 0 && operationDetails.parent_author == '' && operationDetails.title != '') {
                 try {
                     const answer = await actions.ScheduleFlag(globalState, operationDetails)
                     if (answer.signal == true && !globalState.system.pendingAuthorList.includes(answer.author)) {
                         answer.timeFrame.push(answer.author)
                         globalState.system.pendingAuthorList.push(answer.author)
-                        console.log('Post Detected!')
-                        console.log(`In block: ${blockId} | Match #: ${answer.timeFrame.length}`)
+                        console.log(`Post Detected in block id:${blockId}`)
                         console.log(`Author: ${answer.author} | Content-age: ${actions.round(answer.age, 2)} | Avg Value: ${answer.avg} | Profit Chance: ${actions.round(answer.profitChance, 3) + '%'}`)
                         console.log(`Content-link: ${answer.link}`)
         
                         let scheduleTime = (answer.scheduleTime * 60) * 1000 - ((answer.age * 60) * 1000)
-                        actions.setSchedule(globalState, scheduleTime, 'posts', answer.author, answer.parentPerm, answer.perm, answer.avg, answer.link, answer.timeFrame, answer.timeName);
+                        actions.setSchedule(globalState, scheduleTime, 'posts', answer.author, answer.avg, answer.link, answer.timeFrame, answer.timeName, answer.pureL);
                     }
                 } catch (err) {
                     console.log(`Post ScheduleFlag Error! -- ${err}`)
+                    console.log(`---------------------`)
                 }
             }
         })

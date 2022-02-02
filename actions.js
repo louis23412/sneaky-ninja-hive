@@ -244,6 +244,7 @@ const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserL
                     globalState.system.totalErrors++
                 } else {
                     console.log(`Vote success with a weight of ${(voteWeight) / 100}%!`);
+                    console.log(`---------------------`)
                 }
             });
 
@@ -335,7 +336,7 @@ const followNow = (globalState, author, type, newUserList, timeName) => {
     }
 }
 
-const setSchedule = (globalState, time, contentType, author, parentPerm, permLink, avgValue, link, trackingList, timeName) => {
+const setSchedule = (globalState, time, contentType, author, avgValue, link, trackingList, timeName, pureL) => {
     new Promise((resolve, reject) => {
         setTimeout( async () => {
             const index = trackingList.indexOf(author)
@@ -351,7 +352,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             globalState.trackers[timeName][contentType].inspections++
             globalState.system.totalInspections++
 
-            const PostData = await client.database.getState(`/${parentPerm}/@${author}/${permLink}`)
+            const PostData = await client.database.getState(pureL)
             const PostDetails = Object.values(PostData.content)[0]
             const PostCreateDate = Date.parse(new Date(PostDetails.created).toISOString())
             const MinuteDiff = (((new Date().getTime() - PostCreateDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
@@ -361,6 +362,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
 
             console.log(`Inspection time for ${'@' + author}!`)
             console.log(`Content-Age: ${round(MinuteDiff, 2)} -- Value: ${postValue} -- voters: ${totalVoters}`)
+            console.log(`---------------------`)
 
             let votesignal = true
             let voteTicker = 0;
@@ -373,7 +375,9 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             }
 
             if (postValue / avgValue <= 0.025 && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
-            && postValue < globalState.trackers[timeName].posts.minAvg) {
+            && postValue < globalState.trackers[timeName].posts.minAvg
+            && PostDetails.parent_author == '' && PostDetails.title != '') {
+
                 let newVoteWeight = globalState.trackers[timeName].baseWeight;
                 if (globalState.globalVars.VWSCALE == true) {
                     newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
@@ -385,7 +389,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
                 if (globalState.trackers.onlineVotersList[timeName].length > 0) {
                     const linkList = link.split('/')
                     const postPerm = linkList[linkList.length -1]
-                    console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} accounts...`)
+                    console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} account(s)...`)
                     console.log(`---------------------`)
                     //Vote:
                     try {
@@ -434,6 +438,7 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     const parentPermLink = operationDetails.parent_permlink
     const permlink = operationDetails.permlink
     const link = `https://hive.blog/${parentPermLink}/@${author}/${permlink}`
+    const pureLink = `/${parentPermLink}/@${author}/${permlink}`
     const postData = await client.database.getState(`/${parentPermLink}/@${author}/${permlink}`)
     const postDetails = Object.values(postData.content)[0]
     const postCreateDate = Date.parse(new Date(postDetails.created).toISOString())
@@ -476,7 +481,9 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     for (timeFrame of globalState.system.timeFrames) {
         if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
             && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
-            && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0) {
+            && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0
+            && postDetails.parent_author == '' && postDetails.title != ''
+            && !(JSON.parse(postDetails.json_metadata).tags.includes('cross-post'))) {
                 scheduleTime = globalState.trackers[timeFrame].scheduleTime
                 timeName = timeFrame
                 timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
@@ -486,6 +493,7 @@ const ScheduleFlag = async (globalState, operationDetails) => {
                     author : author,
                     avg : avgValue,
                     link : link,
+                    pureL : pureLink,
                     parentPerm : parentPermLink,
                     age : minuteDiff,
                     perm : permlink,

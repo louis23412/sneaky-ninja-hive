@@ -5,7 +5,7 @@
 
     "GLOBALVARS" : {
         "PROGRESSLOG" : true,
-        "LOGRATE" : 5,
+        "LOGRATE" : 1,
 
         "REBLOG" : false,
         "FOLLOW" : false,
@@ -20,7 +20,7 @@
         "MINRC" : 80,
         "VPRANGESTART" : 90,
         "VPRANGESTOP" : 99,
-        "BASEWEIGHT" : 1,
+        "BASEWEIGHT" : 10,
         "VWSCALE" : true
     },
 
