@@ -563,18 +563,20 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     let allVoters = [];
 
     authorContent.forEach(authorPost => {
-        const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
-        const createDate = Date.parse(new Date(authorPost.created).toISOString())
-        const timeDiff = (((new Date().getTime() - createDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
+        const createDate = Number(Date.parse(new Date(authorPost.created).toISOString()))
+        const payoutDate = Number(Date.parse(new Date(authorPost.payout_at).toISOString()))
 
-        if (authorPost.author == author && timeDiff <= 10080) {
+        if (authorPost.author == author && createDate < payoutDate
+            && `/${parentPermLink}/@${author}/${permlink}` != authorPost.url) {
+
+            const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
             postCount += 1
             totalPostValue += postValue
             valueData.push(postValue)
-        }
 
-        for (oldVoter of authorPost.active_votes) {
-            allVoters.push(oldVoter.voter);
+            for (oldVoter of authorPost.active_votes) {
+                allVoters.push(oldVoter.voter);
+            }
         }
     })
 
