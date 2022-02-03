@@ -367,8 +367,11 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
 
             if (postValue / avgValue <= globalState.globalVars.MAXVALUETHRESHOLD / 100
                 && avgValue >= globalState.trackers[timeName].posts.minAvg
-                && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
-                && PostDetails.parent_author == '' && PostDetails.title != ''
+                && !isNaN(postValue / avgValue) 
+                && votesignal == true 
+                && acceptingPayment > 0
+                && PostDetails.parent_author == '' 
+                && PostDetails.title != ''
                 && !commonItems(JSON.parse(PostDetails.json_metadata).tags, SKIPTAGS)) {
 
                 let newVoteWeight = globalState.trackers[timeName].baseWeight;
@@ -462,8 +465,10 @@ const ScheduleFlag = async (globalState, operationDetails) => {
             && postCount <= globalState.globalVars.MAXACTIVEPOSTS
             && avgValue >= globalState.trackers[timeFrame].posts.minAvg 
             && currentVoters <= globalState.globalVars.MAXVOTERS
-            && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0
-            && postDetails.parent_author == '' && postDetails.title != ''
+            && percentile > 0 
+            && globalState.trackers.onlineVotersList.length > 0
+            && postDetails.parent_author == '' 
+            && postDetails.title != ''
             && !commonItems(JSON.parse(postDetails.json_metadata).tags, SKIPTAGS)
             && !commonItems(allVoters, SKIPVOTERS)) {
 
