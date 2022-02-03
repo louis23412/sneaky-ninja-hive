@@ -1,5 +1,6 @@
 const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
+const hiveTx = require('hive-tx')
 const fs = require('fs');
 const { Console } = require('console');
 const { Transform } = require('stream');
@@ -95,7 +96,7 @@ const logTrackers = (globalState) => {
             active_voters.push(displayVotingPower(globalState.trackers[timeRange].votingTracker, globalState))
         }
     }
-    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): ${active_voters}`)
+    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): [${active_voters}]`)
     console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
 }
 
@@ -136,6 +137,7 @@ const logStateStart = (globalState) => {
     table(tableOutput2);
     console.log('TRACKERS:')
     table(tableOutput3);
+    console.log(`---------------------`)
 }
 
 const progressLogger = (globalState, blockId) => {
@@ -271,6 +273,40 @@ const validateSettings = (globalState) => {
             console.log(`---------------------`)
             process.exit();
     }
+}
+
+const validateUsersKeys = async (userList) => {
+    console.log('Validating username(s) + key(s)...')
+    for (i of userList) {
+        const accounts = await hiveTx.call('condenser_api.get_accounts', [[i[0]]])
+        if (
+            !accounts ||
+            !accounts.result ||
+            !Array.isArray(accounts.result) ||
+            accounts.result.length < 1
+        ) {
+            console.log(`Network error or wrong username => ${i[0]}`)
+            process.exit();
+        }
+
+        try {
+            const account = accounts.result[0]
+            const publicWif = account.posting.key_auths[0][0] || ''
+            const generatedPublicKey = hiveTx.PrivateKey.from(i[1])
+            .createPublic()
+            .toString()
+        
+            if (generatedPublicKey !== publicWif) {
+                console.log(`Wrong key => @${i[0]}`)
+                process.exit();
+            }
+            console.log(`USER + KEY CHECK @${i[0]} => PASS!`)
+        } catch (e) {
+            console.log(`Network error or wrong key => @${i[0]}`)
+            process.exit();
+        }
+    }
+    console.log(`---------------------`)
 }
 
 const getVP = async (globalState) => {
@@ -595,6 +631,7 @@ module.exports = {
     logStateStart : logStateStart,
     progressLogger : progressLogger,
     validateSettings : validateSettings,
+    validateUsersKeys : validateUsersKeys,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,
     setSchedule : setSchedule,

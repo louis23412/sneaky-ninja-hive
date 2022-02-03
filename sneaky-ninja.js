@@ -79,7 +79,10 @@ const streamNow = () => {
 const main = async () => {
     actions.validateSettings(globalState);
     actions.logStateStart(globalState);
-    console.log('Starting up block stream...')
+    await actions.validateUsersKeys(USERLIST);
+
+    console.log('Starting up block stream...');
     streamNow();
 }
+
 main();
