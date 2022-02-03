@@ -27,32 +27,38 @@
 * Change the variables as needed:
    ```
     "GLOBALVARS" : {
-        "REBLOG" : false,
-        "FOLLOW" : false,
-        "RFMINWEIGHT" : 100,
+        "PROGRESSLOG" : true,
+        "LOGRATE" : 1,
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "MINAVGPOST" : 3,
-        "MAXVOTERS" : 5,
+        "MAXVOTERS" : 3,
+        "MINAVGPOST" : 1,
+        "DOWNSCALEMINAVG" : true,
+        "MAXVALUETHRESHOLD" : 2.5,
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 92,
-        "VPRANGESTOP" : 97,
-        "BASEWEIGHT" : 15,
+        "BASEWEIGHT" : 1,
+        "VPRANGESTART" : 95,
+        "VPRANGESTOP" : 99,
         "VWSCALE" : true
-    }
-   ```
+    },
 
-* The bot should work just fine with the default rpc list provided, but if it seems a bit slow or fails, you can view the status of all active nodes [here](https://beacon.peakd.com/).
+    "SKIPTAGS" : [
+        "cross-post",
+        "nsfw"
+    ],
 
-   ```
+    "SKIPVOTERS" : [
+        "spaminator"
+    ],
+
     "RPCLIST" : [
-      "https://anyx.io",
-      "https://rpc.ausbit.dev",
-      "https://api.hive.blog",
-      "https://api.openhive.network"
+        "https://anyx.io",
+        "https://rpc.ausbit.dev",
+        "https://api.hive.blog",
+        "https://api.openhive.network"
     ]
    ```
    
