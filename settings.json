@@ -8,8 +8,8 @@
         "LOGRATE" : 1,
 
         "MINREP" : 35,
-        "MAXVOTERS" : 3,
         "MAXACTIVEPOSTS" : 7,
+        "MAXVOTERS" : 3,
         "MINAVGPOST" : 1,
         "DOWNSCALEMINAVG" : true,
         "MAXVALUETHRESHOLD" : 2.5,

@@ -138,6 +138,28 @@ const logStateStart = (globalState) => {
     table(tableOutput3);
 }
 
+const progressLogger = (globalState, blockId) => {
+    let voteStatus = `Recharging Hive Power`
+    for (timeFrame of [...globalState.system.timeFrames].reverse()) {
+        if (globalState.system.votingPower > globalState.trackers[timeFrame].minVP) {
+            voteStatus = `Curating content`;
+        }
+    }
+
+    const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
+    const blockCatchRatio = `${round((globalState.system.blockCounter / (round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%'}`
+
+    if (globalState.globalVars.PROGRESSLOG == true & (globalState.system.blockCounter % globalState.globalVars.LOGRATE == 0 || globalState.system.blockCounter == 1)) {
+        console.log(`* Status: ${voteStatus} || Runtime: ${round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
+        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
+        console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
+        console.log(`* Highest-VP: ${round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+        console.log()
+        logTrackers(globalState)
+        console.log(`${'----------------------------------------------------------------------'}`)
+    }
+}
+
 const setGlobalOnlineLists = (globalState) => {
     globalState.trackers.onlineVotersList = {
         ONE : USERLIST.filter(voter => {
@@ -571,6 +593,7 @@ module.exports = {
     round : round,
     logTrackers : logTrackers,
     logStateStart : logStateStart,
+    progressLogger : progressLogger,
     validateSettings : validateSettings,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,

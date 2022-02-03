@@ -32,18 +32,6 @@ const streamNow = () => {
         }
         actions.setGlobalOnlineLists(globalState);
     
-        let voteStatus = `Recharging Hive Power`
-        for (timeFrame of [...globalState.system.timeFrames].reverse()) {
-            if (globalState.system.votingPower > globalState.trackers[timeFrame].minVP) {
-                voteStatus = `Curating content`;
-            }
-        }
-
-        let vwModeStatus = "FIXED";
-        if (globalState.globalVars.VWSCALE == true) {
-            vwModeStatus = "SCALE";
-        }
-    
         const data = block.transactions
         const blockId = block.block_id
         globalState.system.blockCounter ++
@@ -52,19 +40,6 @@ const streamNow = () => {
             globalState.system.startHP = globalState.system.votingHivePower
             console.log('Stream started!')
             console.log(`---------------------`)
-        }
-    
-        const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
-        const blockCatchRatio = `${actions.round((globalState.system.blockCounter / (actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%'}`
-    
-        if (globalState.globalVars.PROGRESSLOG == true & (globalState.system.blockCounter % globalState.globalVars.LOGRATE == 0 || globalState.system.blockCounter == 1)) {
-            console.log(`* Status: ${voteStatus} || Runtime: ${actions.round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
-            console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks || Voteweight mode: ${vwModeStatus}`)
-            console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
-            console.log(`* Highest-VP: ${actions.round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
-            console.log()
-            actions.logTrackers(globalState)
-            console.log(`${'----------------------------------------------------------------------'}`)
         }
     
         data.forEach(async trans => {
@@ -96,6 +71,8 @@ const streamNow = () => {
                 }
             }
         })
+
+        actions.progressLogger(globalState, blockId)
     }))
 }
 
