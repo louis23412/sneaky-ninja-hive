@@ -1,6 +1,8 @@
 const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
 const fs = require('fs');
+const { Console } = require('console');
+const { Transform } = require('stream');
 
 const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
@@ -52,6 +54,23 @@ const displayVotingPower = (trackerObject, globalState) => {
 const commonItems = (arr1, arr2) => {
     return arr1.some(item => arr2.includes(item))
 }
+
+const table = (input) => {
+    const ts = new Transform({ transform(chunk, enc, cb) { cb(null, chunk) } })
+    const logger = new Console({ stdout: ts })
+    logger.table(input)
+    const table = (ts.read() || '').toString()
+    let result = '';
+    for (let row of table.split(/[\r\n]+/)) {
+      let r = row.replace(/[^┬]*┬/, '┌');
+      r = r.replace(/^├─*┼/, '├');
+      r = r.replace(/│[^│]*/, '');
+      r = r.replace(/^└─*┴/, '└');
+      r = r.replace(/'/g, ' ');
+      result += `${r}\n`;
+    }
+    console.log(result);
+}
 //----------------------------------------------------
 
 // Main actions:
@@ -65,6 +84,45 @@ const logTrackers = (globalState) => {
     }
     console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): ${active_voters}`)
     console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
+}
+
+const logStateStart = (globalState) => {
+    let tableOutput1 = [];
+    let tableOutput2 = [];
+    let tableOutput3 = [];
+
+    tableOutput1.push({
+        'Min author rep' : globalState.globalVars.MINREP,
+        'Max active posts' : globalState.globalVars.MAXACTIVEPOSTS,
+        'Max voters' : globalState.globalVars.MAXVOTERS,
+        'Max value @ voting time' : globalState.globalVars.MAXVALUETHRESHOLD
+    })
+
+    tableOutput2.push({
+        'Progress logging' : globalState.globalVars.PROGRESSLOG,
+        'Lograte' : globalState.globalVars.LOGRATE,
+        'Voteweight scaling' : globalState.globalVars.VWSCALE,
+        'Min RC' : globalState.globalVars.MINRC,
+        'VP range start' : globalState.globalVars.VPRANGESTART,
+        'VP range stop' : globalState.globalVars.VPRANGESTOP
+    })
+
+    for (i in globalState.trackers) {
+        if (i != "onlineVotersList" && i != "offline") {
+            tableOutput3.push({
+                'BaseWeight' : globalState.trackers[i].baseWeight / 100,
+                'Min VP' : globalState.trackers[i].minVP,
+                'Schedule time' : round(globalState.trackers[i].scheduleTime, 3),
+                'Min average post val' : round(globalState.trackers[i].posts.minAvg, 3),
+                'Min voteweight %' : globalState.globalVars.VWSCALE ? round((globalState.trackers[i].baseWeight / 100) * globalState.trackers[i].posts.minAvg, 2) : globalState.trackers[i].baseWeight / 100,
+            })
+        }
+    }
+    console.log('SETTINGS:')
+    table(tableOutput1);
+    table(tableOutput2);
+    console.log('TRACKERS:')
+    table(tableOutput3);
 }
 
 const setGlobalOnlineLists = (globalState) => {
@@ -436,12 +494,10 @@ const ScheduleFlag = async (globalState, operationDetails) => {
 
 module.exports = {
     round : round,
-    displayVotingPower : displayVotingPower,
-    commonItems : commonItems,
     logTrackers : logTrackers,
+    logStateStart : logStateStart,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,
-    voteNow : voteNow,
     setSchedule : setSchedule,
     ScheduleFlag : ScheduleFlag
 }
