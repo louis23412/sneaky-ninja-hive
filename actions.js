@@ -1,8 +1,24 @@
 const hive = require('@hiveio/hive-js')
 const dhive = require('@hiveio/dhive')
+const hiveTx = require('hive-tx')
 const fs = require('fs');
+const { Console } = require('console');
+const { Transform } = require('stream');
 
-const { USERLIST, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
+const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
+
+altEnds = []
+RPCLIST.forEach(rpc => {
+    if (!(rpc == RPCLIST[0])) {
+        altEnds.push(rpc);
+    }
+});
+
+hive.config.uri = RPCLIST[0];
+hive.config.url = RPCLIST[0];
+hive.config.alternative_api_endpoints = altEnds;
+hive.config.failover_threshold = 0;
+hive.config.transport = 'http';
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
@@ -48,6 +64,27 @@ const displayVotingPower = (trackerObject, globalState) => {
     })
     return votingList;
 }
+
+const commonItems = (arr1, arr2) => {
+    return arr1.some(item => arr2.includes(item))
+}
+
+const table = (input) => {
+    const ts = new Transform({ transform(chunk, enc, cb) { cb(null, chunk) } })
+    const logger = new Console({ stdout: ts })
+    logger.table(input)
+    const table = (ts.read() || '').toString()
+    let result = '';
+    for (let row of table.split(/[\r\n]+/)) {
+      let r = row.replace(/[^┬]*┬/, '┌');
+      r = r.replace(/^├─*┼/, '├');
+      r = r.replace(/│[^│]*/, '');
+      r = r.replace(/^└─*┴/, '└');
+      r = r.replace(/'/g, ' ');
+      result += `${r}\n`;
+    }
+    console.log(result);
+}
 //----------------------------------------------------
 
 // Main actions:
@@ -59,8 +96,70 @@ const logTrackers = (globalState) => {
             active_voters.push(displayVotingPower(globalState.trackers[timeRange].votingTracker, globalState))
         }
     }
-    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): ${active_voters}`)
+    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): [${active_voters}]`)
     console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
+}
+
+const logStateStart = (globalState) => {
+    let tableOutput1 = [];
+    let tableOutput2 = [];
+    let tableOutput3 = [];
+
+    tableOutput1.push({
+        'Min author rep' : globalState.globalVars.MINREP,
+        'Max active posts' : globalState.globalVars.MAXACTIVEPOSTS,
+        'Max voters' : globalState.globalVars.MAXVOTERS,
+        'Max value @ voting time' : globalState.globalVars.MAXVALUETHRESHOLD
+    })
+
+    tableOutput2.push({
+        'Progress logging' : globalState.globalVars.PROGRESSLOG,
+        'Lograte' : globalState.globalVars.LOGRATE,
+        'Voteweight scaling' : globalState.globalVars.VWSCALE,
+        'Min RC' : globalState.globalVars.MINRC,
+        'VP range start' : globalState.globalVars.VPRANGESTART,
+        'VP range stop' : globalState.globalVars.VPRANGESTOP
+    })
+
+    for (i in globalState.trackers) {
+        if (i != "onlineVotersList" && i != "offline") {
+            tableOutput3.push({
+                'BaseWeight' : globalState.trackers[i].baseWeight / 100,
+                'Min VP' : globalState.trackers[i].minVP,
+                'Schedule time' : round(globalState.trackers[i].scheduleTime, 3),
+                'Min average post val' : round(globalState.trackers[i].posts.minAvg, 3),
+                'Min voteweight %' : globalState.globalVars.VWSCALE ? round((globalState.trackers[i].baseWeight / 100) * globalState.trackers[i].posts.minAvg, 2) : globalState.trackers[i].baseWeight / 100,
+            })
+        }
+    }
+    console.log('SETTINGS:')
+    table(tableOutput1);
+    table(tableOutput2);
+    console.log('TRACKERS:')
+    table(tableOutput3);
+    console.log(`---------------------`)
+}
+
+const progressLogger = (globalState, blockId) => {
+    let voteStatus = `Recharging Hive Power`
+    for (timeFrame of [...globalState.system.timeFrames].reverse()) {
+        if (globalState.system.votingPower > globalState.trackers[timeFrame].minVP) {
+            voteStatus = `Curating content`;
+        }
+    }
+
+    const runtimeSPGain = globalState.system.votingHivePower - globalState.system.startHP
+    const blockCatchRatio = `${round((globalState.system.blockCounter / (round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2) + '%'}`
+
+    if (globalState.globalVars.PROGRESSLOG == true & (globalState.system.blockCounter % globalState.globalVars.LOGRATE == 0 || globalState.system.blockCounter == 1)) {
+        console.log(`* Status: ${voteStatus} || Runtime: ${round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
+        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
+        console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
+        console.log(`* Highest-VP: ${round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+        console.log()
+        logTrackers(globalState)
+        console.log(`${'----------------------------------------------------------------------'}`)
+    }
 }
 
 const setGlobalOnlineLists = (globalState) => {
@@ -116,6 +215,98 @@ const setGlobalOnlineLists = (globalState) => {
             }
         })
     }
+}
+
+const validateSettings = (globalState) => {
+    if (globalState.globalVars.MINREP < 25 || isNaN(globalState.globalVars.MINREP)) {
+        console.log('==> SCRIPT STOPPED! MINREP HAS TO BE A NUMBER > 25')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXACTIVEPOSTS < 1 || globalState.globalVars.MAXACTIVEPOSTS > 100 ) {
+        console.log('==> SCRIPT STOPPED! MAXACTIVEPOSTS HAS TO BE A NUMBER > 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINAVGPOST <= 0) {
+        console.log('==> SCRIPT STOPPED! MINAVGPOST HAS TO BE A NUMBER > 0')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXVOTERS < 0) {
+        console.log('==> SCRIPT STOPPED! MAXVOTERS HAS TO BE A NUMBER >= 0')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXVALUETHRESHOLD < 0 || globalState.globalVars.MAXVALUETHRESHOLD > 100) {
+        console.log('==> SCRIPT STOPPED! MAXVALUETHRESHOLD HAS TO BE A NUMBER >= 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINSCHEDULETIME <= 0 || globalState.globalVars.MINSCHEDULETIME > 7000) {
+        console.log('==> SCRIPT STOPPED! MINSCHEDULETIME HAS TO BE A NUMBER > 0 <= 7000')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINRC <= 0 || globalState.globalVars.MINRC > 100) {
+        console.log('==> SCRIPT STOPPED! MINRC HAS TO BE A NUMBER > 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.BASEWEIGHT < 1 || isNaN(globalState.globalVars.BASEWEIGHT)) {
+        console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.VPRANGESTART < 0 || globalState.globalVars.VPRANGESTART >= 100
+        || globalState.globalVars.VPRANGESTOP < 0 || globalState.globalVars.VPRANGESTOP >= 100
+        || globalState.globalVars.VPRANGESTART >=  globalState.globalVars.VPRANGESTOP) {
+            console.log('==> SCRIPT STOPPED! VPRANGESTART HAS TO BE A NUMBER SMALLER THAN VPRANGESTOP. BOTH NEED TO BE NUMBERS >= 0 < 100')
+            console.log(`---------------------`)
+            process.exit();
+    }
+}
+
+const validateUsersKeys = async (userList) => {
+    console.log('Validating username(s) + key(s)...')
+    for (i of userList) {
+        const accounts = await hiveTx.call('condenser_api.get_accounts', [[i[0]]])
+        if (
+            !accounts ||
+            !accounts.result ||
+            !Array.isArray(accounts.result) ||
+            accounts.result.length < 1
+        ) {
+            console.log(`Network error or wrong username => ${i[0]}`)
+            process.exit();
+        }
+
+        try {
+            const account = accounts.result[0]
+            const publicWif = account.posting.key_auths[0][0] || ''
+            const generatedPublicKey = hiveTx.PrivateKey.from(i[1])
+            .createPublic()
+            .toString()
+        
+            if (generatedPublicKey !== publicWif) {
+                console.log(`Wrong key => @${i[0]}`)
+                process.exit();
+            }
+            console.log(`USER + KEY CHECK @${i[0]} => PASS!`)
+        } catch (e) {
+            console.log(`Network error or wrong key => @${i[0]}`)
+            process.exit();
+        }
+    }
+    console.log(`---------------------`)
 }
 
 const getVP = async (globalState) => {
@@ -244,6 +435,7 @@ const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserL
                     globalState.system.totalErrors++
                 } else {
                     console.log(`Vote success with a weight of ${(voteWeight) / 100}%!`);
+                    console.log(`---------------------`)
                 }
             });
 
@@ -262,80 +454,7 @@ const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserL
     }
 }
 
-const reblogNow = (globalState, author, postperm, type, newUserList, timeName) => {
-    if (newUserList.length > 0) {
-        userToVote = newUserList[0]
-
-        try {
-            const json = JSON.stringify(['reblog', {
-                account: userToVote[0],
-                author: author,
-                permlink: postperm
-            }]);
-        
-            console.log(`Reblog author => @${author}...`)
-                
-            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
-                if (err) {
-                    globalState.trackers[timeName][type].errors++
-                    globalState.system.totalReblogFails++;
-                } else {
-                    console.log(`@${userToVote[0]} reblog success!`);
-                }
-            });
-
-            let updatedUserListToVote = [...newUserList];
-            updatedUserListToVote.splice(0, 1);
-            reblogNow(globalState, author, postperm, type, updatedUserListToVote, timeName);
-
-        } catch (error) {
-            globalState.trackers[timeName][type].errors++
-            globalState.system.totalReblogFails++;
-        }
-
-    } else if (newUserList.length == 0) {
-        globalState.trackers[timeName][type].reblogs++
-        globalState.system.totalReblogs++
-    }
-}
-
-const followNow = (globalState, author, type, newUserList, timeName) => {
-    if (newUserList.length > 0) {
-        userToVote = newUserList[0]
-
-        try {
-            const json2 = JSON.stringify(['follow', {
-                follower: userToVote[0],
-                following: author,
-                what: ["blog"],
-            }]);
-        
-            console.log(`Follow author => @${author}...`)
-        
-            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json2, (err, result) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    console.log(`Follow success!`);
-                }
-            });
-
-            let updatedUserListToVote = [...newUserList];
-            updatedUserListToVote.splice(0, 1);
-            followNow(globalState, author, type, updatedUserListToVote, timeName);
-            
-        } catch (error) {
-            globalState.trackers[timeName][type].errors++
-            globalState.system.totalFollowFails++;
-        }
-
-    } else if (newUserList.length == 0) {
-        globalState.trackers[timeName][type].follows++
-        globalState.system.totalFollows++
-    }
-}
-
-const setSchedule = (globalState, time, contentType, author, parentPerm, permLink, avgValue, link, trackingList, timeName) => {
+const setSchedule = (globalState, time, contentType, author, avgValue, link, trackingList, timeName, pureL) => {
     new Promise((resolve, reject) => {
         setTimeout( async () => {
             const index = trackingList.indexOf(author)
@@ -351,7 +470,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
             globalState.trackers[timeName][contentType].inspections++
             globalState.system.totalInspections++
 
-            const PostData = await client.database.getState(`/${parentPerm}/@${author}/${permLink}`)
+            const PostData = await client.database.getState(pureL)
             const PostDetails = Object.values(PostData.content)[0]
             const PostCreateDate = Date.parse(new Date(PostDetails.created).toISOString())
             const MinuteDiff = (((new Date().getTime() - PostCreateDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
@@ -361,19 +480,29 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
 
             console.log(`Inspection time for ${'@' + author}!`)
             console.log(`Content-Age: ${round(MinuteDiff, 2)} -- Value: ${postValue} -- voters: ${totalVoters}`)
+            console.log(`---------------------`)
 
             let votesignal = true
             let voteTicker = 0;
             for (voter of PostDetails.active_votes) {
                 voteTicker++;
-                if (userNamesList.includes(voter.voter) || voter == author || voteTicker > Number(globalState.globalVars.MAXVOTERS)){
+                if (userNamesList.includes(voter.voter) || voter == author 
+                    || voteTicker > Number(globalState.globalVars.MAXVOTERS || globalState)
+                    || SKIPVOTERS.includes(voter.voter)){
                     votesignal = false
                     break;
                 }
             }
 
-            if (postValue / avgValue <= 0.025 && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
-            && postValue < globalState.trackers[timeName].posts.minAvg) {
+            if (postValue / avgValue <= globalState.globalVars.MAXVALUETHRESHOLD / 100
+                && avgValue >= globalState.trackers[timeName].posts.minAvg
+                && !isNaN(postValue / avgValue) 
+                && votesignal == true 
+                && acceptingPayment > 0
+                && PostDetails.parent_author == '' 
+                && PostDetails.title != ''
+                && !commonItems(JSON.parse(PostDetails.json_metadata).tags, SKIPTAGS)) {
+
                 let newVoteWeight = globalState.trackers[timeName].baseWeight;
                 if (globalState.globalVars.VWSCALE == true) {
                     newVoteWeight = Math.round(globalState.trackers[timeName].baseWeight * avgValue)
@@ -385,7 +514,7 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
                 if (globalState.trackers.onlineVotersList[timeName].length > 0) {
                     const linkList = link.split('/')
                     const postPerm = linkList[linkList.length -1]
-                    console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} accounts...`)
+                    console.log(`VOTE OPPORTUNITY DETECTED! Broadcasting now with ${globalState.trackers.onlineVotersList[timeName].length} account(s)...`)
                     console.log(`---------------------`)
                     //Vote:
                     try {
@@ -394,33 +523,15 @@ const setSchedule = (globalState, time, contentType, author, parentPerm, permLin
                         globalState.system.totalErrors++;
                     }
 
-                    //Reblog:
-                    if (globalState.globalVars.REBLOG == true) {
-                        try {
-                            reblogNow(globalState, author, postPerm, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
-                        } catch (error) {
-                            globalState.system.totalReblogFails++;
-                        }
-                    }
-
-                    //Follow:
-                    if (globalState.globalVars.FOLLOW == true) {
-                        try {
-                            followNow(globalState, author, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
-                        } catch (error) {
-                            globalState.system.totalFollowFails++;
-                        }
-                    }
-
                 } else {
-                    console.log('No accounts available to vote @ this timeframe')
+                    console.log('No accounts available to vote @ this timeframe!')
                     console.log(`---------------------`)
                 }
             } else if (votesignal == false) {
-                console.log(`Already voted here! / Author has voted here! / Too many voters!`)
+                console.log(`Conditions not met!`)
                 console.log(`---------------------`)
             } else {
-                console.log(`Not profitable to vote! =(`)
+                console.log(`Not worth the vote!`)
                 console.log(`---------------------`)
             }
         }, time)
@@ -434,31 +545,38 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     const parentPermLink = operationDetails.parent_permlink
     const permlink = operationDetails.permlink
     const link = `https://hive.blog/${parentPermLink}/@${author}/${permlink}`
+    const pureLink = `/${parentPermLink}/@${author}/${permlink}`
     const postData = await client.database.getState(`/${parentPermLink}/@${author}/${permlink}`)
     const postDetails = Object.values(postData.content)[0]
     const postCreateDate = Date.parse(new Date(postDetails.created).toISOString())
     const currentVoters = postDetails.active_votes.length
     const minuteDiff = (((new Date().getTime() - postCreateDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
-    const authorState = await client.database.getState(`/@${author}`)
-    const authorDetails = Object.values(authorState.accounts)[0]
-    const authorRep = hive.formatter.reputation(authorDetails.reputation)
-    let authorContent = Object.values(authorState.content)
+
+    const authorContent = await client.hivemind.call('get_account_posts', {sort: 'posts', account: author, limit: 100})
+    const authorRep = authorContent[0].author_reputation;
 
     globalState.system.operationInspections++
 
     let postCount = 0
     let totalPostValue = 0
     let valueData = [];
+    let allVoters = [];
 
     authorContent.forEach(authorPost => {
-        const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
-        const createDate = Date.parse(new Date(authorPost.created).toISOString())
-        const timeDiff = (((new Date().getTime() - createDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
+        const createDate = Number(Date.parse(new Date(authorPost.created).toISOString()))
+        const payoutDate = Number(Date.parse(new Date(authorPost.payout_at).toISOString()))
 
-        if (authorPost.author == author && timeDiff <= 10080) {
+        if (authorPost.author == author && createDate < payoutDate
+            && `/${parentPermLink}/@${author}/${permlink}` != authorPost.url) {
+
+            const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
             postCount += 1
             totalPostValue += postValue
             valueData.push(postValue)
+
+            for (oldVoter of authorPost.active_votes) {
+                allVoters.push(oldVoter.voter);
+            }
         }
     })
 
@@ -474,9 +592,16 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     let timeName = ''
 
     for (timeFrame of globalState.system.timeFrames) {
-        if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
-            && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
-            && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0) {
+        if (authorRep >= globalState.globalVars.MINREP 
+            && postCount <= globalState.globalVars.MAXACTIVEPOSTS
+            && avgValue >= globalState.trackers[timeFrame].posts.minAvg 
+            && currentVoters <= globalState.globalVars.MAXVOTERS
+            && percentile > 0
+            && postDetails.parent_author == '' 
+            && postDetails.title != ''
+            && !commonItems(JSON.parse(postDetails.json_metadata).tags, SKIPTAGS)
+            && !commonItems(allVoters, SKIPVOTERS)) {
+
                 scheduleTime = globalState.trackers[timeFrame].scheduleTime
                 timeName = timeFrame
                 timeFrame = globalState.trackers[timeFrame].posts.pendingInspections
@@ -486,6 +611,7 @@ const ScheduleFlag = async (globalState, operationDetails) => {
                     author : author,
                     avg : avgValue,
                     link : link,
+                    pureL : pureLink,
                     parentPerm : parentPermLink,
                     age : minuteDiff,
                     perm : permlink,
@@ -503,11 +629,13 @@ const ScheduleFlag = async (globalState, operationDetails) => {
 
 module.exports = {
     round : round,
-    displayVotingPower : displayVotingPower,
     logTrackers : logTrackers,
+    logStateStart : logStateStart,
+    progressLogger : progressLogger,
+    validateSettings : validateSettings,
+    validateUsersKeys : validateUsersKeys,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,
-    voteNow : voteNow,
     setSchedule : setSchedule,
     ScheduleFlag : ScheduleFlag
 }

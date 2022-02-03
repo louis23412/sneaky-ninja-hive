@@ -5,24 +5,31 @@
 
     "GLOBALVARS" : {
         "PROGRESSLOG" : true,
-        "LOGRATE" : 5,
-
-        "REBLOG" : false,
-        "FOLLOW" : false,
-        "RFMINWEIGHT" : 100,
+        "LOGRATE" : 1,
 
         "MINREP" : 35,
         "MAXACTIVEPOSTS" : 7,
-        "MINAVGPOST" : 1,
         "MAXVOTERS" : 3,
+        "MINAVGPOST" : 1,
+        "DOWNSCALEMINAVG" : true,
+        "MAXVALUETHRESHOLD" : 2.5,
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
-        "VPRANGESTART" : 90,
-        "VPRANGESTOP" : 99,
         "BASEWEIGHT" : 1,
+        "VPRANGESTART" : 95,
+        "VPRANGESTOP" : 99,
         "VWSCALE" : true
     },
+
+    "SKIPTAGS" : [
+        "cross-post",
+        "nsfw"
+    ],
+
+    "SKIPVOTERS" : [
+        "spaminator"
+    ],
 
     "RPCLIST" : [
         "https://anyx.io",

@@ -11,6 +11,7 @@
   "dependencies": {
     "@hiveio/dhive": "^1.1.1",
     "@hiveio/hive-js": "^2.0.4",
-    "event-stream": "^4.0.1"
+    "event-stream": "^4.0.1",
+    "hive-tx": "^4.0.1"
   }
 }
