@@ -308,8 +308,8 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
             }
 
             if (postValue / avgValue <= globalState.globalVars.MAXVALUETHRESHOLD / 100
+                && avgValue >= globalState.trackers[timeName].posts.minAvg
                 && !isNaN(postValue / avgValue) && votesignal == true && acceptingPayment > 0
-                && postValue < globalState.trackers[timeName].posts.minAvg
                 && PostDetails.parent_author == '' && PostDetails.title != ''
                 && !commonItems(JSON.parse(PostDetails.json_metadata).tags, SKIPTAGS)) {
 
@@ -400,12 +400,15 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     let timeName = ''
 
     for (timeFrame of globalState.system.timeFrames) {
-        if (authorRep >= globalState.globalVars.MINREP && postCount <= globalState.globalVars.MAXACTIVEPOSTS
-            && avgValue >= globalState.trackers[timeFrame].posts.minAvg && currentVoters <= globalState.globalVars.MAXVOTERS
+        if (authorRep >= globalState.globalVars.MINREP 
+            && postCount <= globalState.globalVars.MAXACTIVEPOSTS
+            && avgValue >= globalState.trackers[timeFrame].posts.minAvg 
+            && currentVoters <= globalState.globalVars.MAXVOTERS
             && percentile > 0 && globalState.trackers[timeFrame].onlineList.length > 0
             && postDetails.parent_author == '' && postDetails.title != ''
             && !commonItems(JSON.parse(postDetails.json_metadata).tags, SKIPTAGS)
             && !commonItems(allVoters, SKIPVOTERS)) {
+
                 scheduleTime = globalState.trackers[timeFrame].scheduleTime
                 timeName = timeFrame
                 timeFrame = globalState.trackers[timeFrame].posts.pendingInspections

@@ -111,14 +111,26 @@ const main = async () => {
     hive.config.failover_threshold = 0;
     hive.config.transport = 'http';
     //----------------------------------------------------
-
     //Check base weight before starting script:
     if (globalState.globalVars.BASEWEIGHT < 1) {
         console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+        console.log(`---------------------`)
         process.exit();
     }
-
     //----------------------------------------------------
+    //Log settings before start:
+    // console.log('SETTINGS:')
+    // console.log(`=> Progress log : ${globalState.globalVars.PROGRESSLOG} || Log every ${globalState.globalVars.LOGRATE} blocks`);
+    // console.log(`=> Minimum author rep : ${globalState.globalVars.MINREP} || Max active post over last 7 days : ${globalState.globalVars.MAXACTIVEPOSTS}`);
+    // console.log(`=> Max voters allowed : ${globalState.globalVars.MAXVOTERS} || Max post value % allowed at vote time : ${globalState.globalVars.MAXVALUETHRESHOLD}`);
+    // console.log(`=> Minimum resource credits : ${globalState.globalVars.MINRC} || Voting power % ranges from ${globalState.globalVars.VPRANGESTART} to ${globalState.globalVars.VPRANGESTOP}`)
+    // console.log(`=> Voteweight scaling : ${globalState.globalVars.VWSCALE}`)
+    // console.log(``)
+    // console.log('TRACKERS:')
+    // console.log()
+    console.log(globalState.trackers)
+    process.exit();
+
     //Start:
     console.log('Starting up block stream...')
     streamNow();
