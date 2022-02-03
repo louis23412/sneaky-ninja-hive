@@ -8,17 +8,17 @@
         "LOGRATE" : 1,
 
         "MINREP" : 35,
+        "MAXVOTERS" : 3,
         "MAXACTIVEPOSTS" : 7,
         "MINAVGPOST" : 1,
         "DOWNSCALEMINAVG" : true,
-        "MAXVOTERS" : 3,
-        "MAXVALUETHRESHOLD" : 2.5, 
+        "MAXVALUETHRESHOLD" : 2.5,
         "MINSCHEDULETIME" : 4.88,
 
         "MINRC" : 80,
+        "BASEWEIGHT" : 1,
         "VPRANGESTART" : 95,
         "VPRANGESTOP" : 99,
-        "BASEWEIGHT" : 1,
         "VWSCALE" : true
     },
 

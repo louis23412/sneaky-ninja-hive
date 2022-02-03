@@ -6,6 +6,19 @@ const { Transform } = require('stream');
 
 const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
+altEnds = []
+RPCLIST.forEach(rpc => {
+    if (!(rpc == RPCLIST[0])) {
+        altEnds.push(rpc);
+    }
+});
+
+hive.config.uri = RPCLIST[0];
+hive.config.url = RPCLIST[0];
+hive.config.alternative_api_endpoints = altEnds;
+hive.config.failover_threshold = 0;
+hive.config.transport = 'http';
+
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
 const rcapi = new dhive.RCAPI(client);
 
@@ -177,6 +190,64 @@ const setGlobalOnlineLists = (globalState) => {
                 return voter
             }
         })
+    }
+}
+
+const validateSettings = (globalState) => {
+    if (globalState.globalVars.MINREP < 25 || isNaN(globalState.globalVars.MINREP)) {
+        console.log('==> SCRIPT STOPPED! MINREP HAS TO BE A NUMBER > 25')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXACTIVEPOSTS < 1 || globalState.globalVars.MAXACTIVEPOSTS > 100 ) {
+        console.log('==> SCRIPT STOPPED! MAXACTIVEPOSTS HAS TO BE A NUMBER > 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINAVGPOST <= 0) {
+        console.log('==> SCRIPT STOPPED! MINAVGPOST HAS TO BE A NUMBER > 0')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXVOTERS < 0) {
+        console.log('==> SCRIPT STOPPED! MAXVOTERS HAS TO BE A NUMBER >= 0')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MAXVALUETHRESHOLD < 0 || globalState.globalVars.MAXVALUETHRESHOLD > 100) {
+        console.log('==> SCRIPT STOPPED! MAXVALUETHRESHOLD HAS TO BE A NUMBER >= 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINSCHEDULETIME <= 0 || globalState.globalVars.MINSCHEDULETIME > 7000) {
+        console.log('==> SCRIPT STOPPED! MINSCHEDULETIME HAS TO BE A NUMBER > 0 <= 7000')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.MINRC <= 0 || globalState.globalVars.MINRC > 100) {
+        console.log('==> SCRIPT STOPPED! MINRC HAS TO BE A NUMBER > 0 <= 100')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.BASEWEIGHT < 1 || isNaN(globalState.globalVars.BASEWEIGHT)) {
+        console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
+        console.log(`---------------------`)
+        process.exit();
+    }
+
+    if (globalState.globalVars.VPRANGESTART < 0 || globalState.globalVars.VPRANGESTART >= 100
+        || globalState.globalVars.VPRANGESTOP < 0 || globalState.globalVars.VPRANGESTOP >= 100
+        || globalState.globalVars.VPRANGESTART >=  globalState.globalVars.VPRANGESTOP) {
+            console.log('==> SCRIPT STOPPED! VPRANGESTART HAS TO BE A NUMBER SMALLER THAN VPRANGESTOP. BOTH NEED TO BE NUMBERS >= 0 < 100')
+            console.log(`---------------------`)
+            process.exit();
     }
 }
 
@@ -500,6 +571,7 @@ module.exports = {
     round : round,
     logTrackers : logTrackers,
     logStateStart : logStateStart,
+    validateSettings : validateSettings,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,
     setSchedule : setSchedule,

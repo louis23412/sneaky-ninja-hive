@@ -1,5 +1,4 @@
 const dhive = require('@hiveio/dhive')
-const hive = require('@hiveio/hive-js');
 const fs = require('fs');
 const es = require('event-stream');
 const actions = require('./actions');
@@ -101,28 +100,7 @@ const streamNow = () => {
 }
 
 const main = async () => {
-    //Update config for hivejs with new rpc list:
-    altEnds = []
-    RPCLIST.forEach(rpc => {
-        if (!(rpc == RPCLIST[0])) {
-            altEnds.push(rpc);
-        }
-    });
-
-    hive.config.uri = RPCLIST[0];
-    hive.config.url = RPCLIST[0];
-    hive.config.alternative_api_endpoints = altEnds;
-    hive.config.failover_threshold = 0;
-    hive.config.transport = 'http';
-    //----------------------------------------------------
-    //Check base weight before starting script:
-    if (globalState.globalVars.BASEWEIGHT < 1) {
-        console.log('==> SCRIPT STOPPED! BASEWEIGHT HAS TO BE > 1%')
-        console.log(`---------------------`)
-        process.exit();
-    }
-    //----------------------------------------------------
-    //Start:
+    actions.validateSettings(globalState);
     actions.logStateStart(globalState);
     console.log('Starting up block stream...')
     streamNow();
