@@ -465,8 +465,7 @@ const ScheduleFlag = async (globalState, operationDetails) => {
             && postCount <= globalState.globalVars.MAXACTIVEPOSTS
             && avgValue >= globalState.trackers[timeFrame].posts.minAvg 
             && currentVoters <= globalState.globalVars.MAXVOTERS
-            && percentile > 0 
-            && globalState.trackers.onlineVotersList.length > 0
+            && percentile > 0
             && postDetails.parent_author == '' 
             && postDetails.title != ''
             && !commonItems(JSON.parse(postDetails.json_metadata).tags, SKIPTAGS)
