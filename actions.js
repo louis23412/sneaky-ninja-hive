@@ -563,12 +563,12 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     let allVoters = [];
 
     authorContent.forEach(authorPost => {
-        const createDate = Number(Date.parse(new Date(authorPost.created).toISOString()))
-        const payoutDate = Number(Date.parse(new Date(authorPost.payout_at).toISOString()))
-
-        if (authorPost.author == author && createDate < payoutDate
+        const createDate = Date.parse(new Date(authorPost.created).toISOString())
+        const timeDiff = (((new Date().getTime() - createDate) / 1000) / 60) - Math.abs(new Date().getTimezoneOffset())
+        
+        if (authorPost.author == author && timeDiff < 10080
             && `/${parentPermLink}/@${author}/${permlink}` != authorPost.url) {
-
+        
             const postValue = Number(authorPost.pending_payout_value.replace(' HBD', ''))
             postCount += 1
             totalPostValue += postValue
