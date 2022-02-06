@@ -53,7 +53,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 5,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 1 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 1 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -68,7 +68,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 10,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 2 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 2 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -83,7 +83,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 15,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 3 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 3 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -98,7 +98,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 20,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 4 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 4 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -113,7 +113,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 25,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 5 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 5 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -128,7 +128,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 30,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 6 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 6 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -143,7 +143,7 @@ module.exports = globalState = {
             votingTracker : {},
             scheduleTime : GLOBALVARS.MINSCHEDULETIME + 35,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 7 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 7 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -156,9 +156,9 @@ module.exports = globalState = {
             minVP : GLOBALVARS.VPRANGESTOP - (((GLOBALVARS.VPRANGESTOP - GLOBALVARS.VPRANGESTART) / 10) * 8),
             onlineList : [],
             votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 40,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 45,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 8 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 8 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
@@ -171,9 +171,9 @@ module.exports = globalState = {
             minVP : GLOBALVARS.VPRANGESTART,
             onlineList : [],
             votingTracker : {},
-            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 45,
+            scheduleTime : GLOBALVARS.MINSCHEDULETIME + 55,
             posts : {
-                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST / 2) / 10 * 9 : GLOBALVARS.MINAVGPOST,
+                minAvg : GLOBALVARS.DOWNSCALEMINAVG ? GLOBALVARS.MINAVGPOST - (GLOBALVARS.MINAVGPOST) / 10 * 9 : GLOBALVARS.MINAVGPOST,
                 errors: 0,
                 votes: 0,
                 inspections: 0,
