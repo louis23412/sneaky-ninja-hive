@@ -594,7 +594,8 @@ const ScheduleFlag = async (globalState, operationDetails) => {
     for (timeFrame of globalState.system.timeFrames) {
         if (authorRep >= globalState.globalVars.MINREP 
             && postCount <= globalState.globalVars.MAXACTIVEPOSTS
-            && avgValue >= globalState.trackers[timeFrame].posts.minAvg 
+            && (globalState.trackers[timeFrame].onlineList.length > 0 
+                && avgValue >= globalState.trackers[timeFrame].posts.minAvg)
             && currentVoters <= globalState.globalVars.MAXVOTERS
             && percentile > 0
             && postDetails.parent_author == '' 
