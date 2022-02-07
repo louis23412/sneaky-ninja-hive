@@ -89,17 +89,6 @@ const table = (input) => {
 
 // Main actions:
 //----------------------------------------------------
-const logTrackers = (globalState) => {
-    let active_voters = [];
-    for (timeRange of globalState.system.timeFrames) {
-        if (globalState.trackers[timeRange].onlineList.length > 0) {
-            active_voters.push(displayVotingPower(globalState.trackers[timeRange].votingTracker, globalState))
-        }
-    }
-    console.log(`└─| Online voters:(${globalState.system.accsLinked - Object.keys(globalState.trackers.offline.offlineVoters).length}): [${active_voters}]`)
-    console.log(`└─| Offline voters(${Object.keys(globalState.trackers.offline.offlineVoters).length}): ==> [${displayVotingPower(globalState.trackers.offline.offlineVoters, globalState)}]`)
-}
-
 const logStateStart = (globalState) => {
     let tableOutput1 = [];
     let tableOutput2 = [];
@@ -156,8 +145,6 @@ const progressLogger = (globalState, blockId) => {
         console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
         console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
         console.log(`* Highest-VP: ${round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
-        console.log()
-        logTrackers(globalState)
         console.log(`${'----------------------------------------------------------------------'}`)
     }
 }
@@ -327,7 +314,7 @@ const getVP = async (globalState) => {
 
     if (globalState.system.blockCounter % 5 == 0) {
         for (time in globalState.trackers) {
-            if (time != 'offline') {
+            if (time != 'offline' & time != 'onlineVotersList') {
                 globalState.trackers[time].votingTracker = {}
                 globalState.trackers[time].onlineList = []
             } else if (time == 'offline') {
@@ -348,55 +335,55 @@ const getVP = async (globalState) => {
                 if (!globalState.trackers.ONE.onlineList.includes(value[0])) {
                     globalState.trackers.ONE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.TWO.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TWO.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TWO.onlineList.includes(value[0])) {
                     globalState.trackers.TWO.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.THREE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.THREE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.THREE.onlineList.includes(value[0])) {
                     globalState.trackers.THREE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.FOUR.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FOUR.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FOUR.onlineList.includes(value[0])) {
                     globalState.trackers.FOUR.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.FIVE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.FIVE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.FIVE.onlineList.includes(value[0])) {
                     globalState.trackers.FIVE.onlineList.push(value[0])
                 }
-            }else if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.SIX.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SIX.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SIX.onlineList.includes(value[0])) {
                     globalState.trackers.SIX.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.SEVEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.SEVEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.SEVEN.onlineList.includes(value[0])) {
                     globalState.trackers.SEVEN.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.EIGHT.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.EIGHT.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.EIGHT.onlineList.includes(value[0])) {
                     globalState.trackers.EIGHT.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.NINE.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.NINE.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.NINE.onlineList.includes(value[0])) {
                     globalState.trackers.NINE.onlineList.push(value[0])
                 }
-            } else if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP
+            } if (value[1].percentage / 100 >= globalState.trackers.TEN.minVP
                 && Number(globalState.system.rcList[value[0]]) >= Number(globalState.globalVars.MINRC)) {
                 globalState.trackers.TEN.votingTracker[value[0]] = value[1]
                 if (!globalState.trackers.TEN.onlineList.includes(value[0])) {
@@ -630,7 +617,6 @@ const ScheduleFlag = async (globalState, operationDetails) => {
 
 module.exports = {
     round : round,
-    logTrackers : logTrackers,
     logStateStart : logStateStart,
     progressLogger : progressLogger,
     validateSettings : validateSettings,
