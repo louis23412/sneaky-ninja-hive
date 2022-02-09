@@ -441,6 +441,37 @@ const voteNow = (globalState, author, postperm, link, type, voteWeight, newUserL
     }
 }
 
+const reblogNow = (globalState, author, postperm, type, newUserList, timeName) => {
+    if (newUserList.length > 0) {
+        userToVote = newUserList[0]
+
+        try {
+            const json = JSON.stringify(['reblog', {
+                account: userToVote[0],
+                author: author,
+                permlink: postperm
+            }]);
+        
+            console.log(`Reblog author => @${author}...`)
+                
+            hive.broadcast.customJson(userToVote[1], [], [userToVote[0]], 'follow', json, (err, result) => {
+                if (err) {
+                } else {
+                    console.log(`@${userToVote[0]} reblog success!`);
+                }
+            });
+
+            let updatedUserListToVote = [...newUserList];
+            updatedUserListToVote.splice(0, 1);
+            reblogNow(globalState, author, postperm, type, updatedUserListToVote, timeName);
+
+        } catch (error) {
+        }
+
+    } else if (newUserList.length == 0) {
+    }
+}
+
 const setSchedule = (globalState, time, contentType, author, avgValue, link, trackingList, timeName, pureL) => {
     new Promise((resolve, reject) => {
         setTimeout( async () => {
@@ -508,6 +539,11 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
                         voteNow(globalState, author, postPerm, link, contentType, newVoteWeight, globalState.trackers.onlineVotersList[timeName], timeName); 
                     } catch (error) {
                         globalState.system.totalErrors++;
+                    }
+
+                    try {
+                        reblogNow(globalState, author, postPerm, contentType, globalState.trackers.onlineVotersList[timeName], timeName)
+                    } catch (error) {
                     }
 
                 } else {
