@@ -5,7 +5,7 @@ const fs = require('fs');
 const { Console } = require('console');
 const { Transform } = require('stream');
 
-const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
+const { USERLIST, SKIPTAGS, SKIPVOTERS, RPCLIST, reporter} = JSON.parse(fs.readFileSync('./settings.json'));
 
 altEnds = []
 RPCLIST.forEach(rpc => {
@@ -294,6 +294,28 @@ const validateUsersKeys = async (userList) => {
         }
     }
     console.log(`---------------------`)
+}
+
+const reportToMaster = (globalState) => {
+    const json = JSON.stringify({
+        runTime : round((new Date() - globalState.system.startTime) / 1000 / 60, 2),
+        streamErrors : globalState.system.streamErr,
+        brRatio : round((globalState.system.blockCounter / (round((new Date() - globalState.system.startTime) / 1000 / 60, 2) * 20)) * 100, 2),
+        runtimeHpGain : globalState.system.votingHivePower - globalState.system.startHP,
+        votes : globalState.system.totalVotes,
+        voteFails : globalState.system.totalErrors,
+        completedInspections : globalState.system.totalInspections,
+        pendingInspections : globalState.system.pendingAuthorList.length
+    });
+
+    try {
+        hive.broadcast.customJson(reporter[1], [], [reporter[0]], `${reporter[0]}-sneaky-ninja-report`, json, function(err, result) {
+            if (err) {
+            } else {
+            }
+        });
+    } catch (error) {
+    }
 }
 
 const getVP = async (globalState) => {
@@ -657,6 +679,7 @@ module.exports = {
     progressLogger : progressLogger,
     validateSettings : validateSettings,
     validateUsersKeys : validateUsersKeys,
+    reportToMaster : reportToMaster,
     setGlobalOnlineLists : setGlobalOnlineLists,
     getVP : getVP,
     setSchedule : setSchedule,

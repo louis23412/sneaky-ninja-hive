@@ -40,6 +40,8 @@ const streamNow = () => {
             globalState.system.startHP = globalState.system.votingHivePower
             console.log('Stream started!')
             console.log(`---------------------`)
+        } else if (globalState.system.blockCounter % 100 == 0 && globalState.system.blockCounter != 1) {
+            actions.reportToMaster(globalState);
         }
     
         data.forEach(async trans => {

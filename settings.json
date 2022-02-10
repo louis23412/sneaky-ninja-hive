@@ -36,5 +36,7 @@
         "https://rpc.ausbit.dev",
         "https://api.hive.blog",
         "https://api.openhive.network"
-    ]
+    ],
+
+    "reporter" : ["user", "key"]
 }
