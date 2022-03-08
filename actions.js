@@ -58,13 +58,6 @@ const calculateProfit = (arr, avgval) => {
     return percentile
 }
 
-const displayVotingPower = (trackerObject, globalState) => {
-    const votingList = Object.entries(trackerObject).map(acc => {
-        return `@${acc[0]}(VP:${acc[1].percentage / 100}% - RC:${globalState.system.rcList[acc[0]]}%)`
-    })
-    return votingList;
-}
-
 const commonItems = (arr1, arr2) => {
     return arr1.some(item => arr2.includes(item))
 }
@@ -142,9 +135,10 @@ const progressLogger = (globalState, blockId) => {
 
     if (globalState.globalVars.PROGRESSLOG == true & (globalState.system.blockCounter % globalState.globalVars.LOGRATE == 0 || globalState.system.blockCounter == 1)) {
         console.log(`* Status: ${voteStatus} || Runtime: ${round((new Date() - globalState.system.startTime) / 1000 / 60, 2) + ' mins'} || Stream errors: ${globalState.system.streamErr} || Block Catch Ratio: ${blockCatchRatio}`)
-        console.log(`* Last block inspected ID: ${blockId} || ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
+        console.log(`* ${globalState.system.operationInspections} posts detected in ${globalState.system.blockCounter} blocks`)
         console.log(`* Accounts Linked: ${userNamesList.length} || Total HP voting: ${globalState.system.votingHivePower} || Run-time HP Gain: ${runtimeSPGain} || Gain %: ${(runtimeSPGain / globalState.system.votingHivePower) * 100}`)
         console.log(`* Highest-VP: ${round(globalState.system.votingPower, 3) + '%'} || Votes: ${globalState.system.totalVotes} || Vote Fails: ${globalState.system.totalErrors} || Completed Inspections: ${globalState.system.totalInspections} || Pending Inspections: ${globalState.system.pendingAuthorList.length}`)
+        console.log(`* Current missed votes: ${globalState.missedList.length}`)
         console.log(`${'----------------------------------------------------------------------'}`)
     }
 }
@@ -512,6 +506,13 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
 
                 } else {
                     console.log('No accounts available to vote @ this timeframe!')
+
+                    globalState.missedList.push({
+                        id : `${author}${newVoteWeight}`,
+                        author : author,
+                        link : link,
+                        vWeight : newVoteWeight
+                    })
                     console.log(`---------------------`)
                 }
             } else if (votesignal == false) {

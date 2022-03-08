@@ -2,11 +2,17 @@ const dhive = require('@hiveio/dhive')
 const fs = require('fs');
 const es = require('event-stream');
 const actions = require('./actions');
+const express = require('express');
+const cors = require('cors');
 let globalState = require('./globalState');
 
 const { USERLIST, RPCLIST} = JSON.parse(fs.readFileSync('./settings.json'));
 
 const client = new dhive.Client(RPCLIST, {failoverThreshold : 0});
+const app = express();
+
+app.use(express.json());
+app.use(cors());
 
 const streamNow = () => {
     const userNamesList = USERLIST.map(user => {
@@ -76,6 +82,19 @@ const streamNow = () => {
     }))
 }
 
+app.get('/contentlist', (req, res) => { res.send(globalState.missedList) });
+
+app.post('/removepost', async (req, res) => {
+    const { id } = req.body
+
+    globalState.missedList.forEach((v,i) => {
+        if (v.id == id) {
+            globalState.missedList.splice(i, 1);
+            res.send({result : true})
+        }
+    })
+});
+
 const main = async () => {
     actions.validateSettings(globalState);
     actions.logStateStart(globalState);
@@ -83,6 +102,7 @@ const main = async () => {
 
     console.log('Starting up block stream...');
     streamNow();
+    app.listen(3001, () => { console.log('app is running on port 3001') });
 }
 
 main();

@@ -24,6 +24,8 @@ module.exports = globalState = {
         streamErr : 0
     },
 
+    missedList : [],
+
     trackers : {
         onlineVotersList : {},
 
