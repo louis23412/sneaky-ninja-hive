@@ -511,7 +511,8 @@ const setSchedule = (globalState, time, contentType, author, avgValue, link, tra
                         id : `${author}${newVoteWeight}`,
                         author : author,
                         link : link,
-                        vWeight : newVoteWeight
+                        vWeight : newVoteWeight,
+                        maxValAllowed : avgValue * (globalState.globalVars.MAXVALUETHRESHOLD / 100)
                     })
                     console.log(`---------------------`)
                 }
